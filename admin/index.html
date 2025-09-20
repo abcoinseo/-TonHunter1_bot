@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - MoneBux</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #ffffff;
+            margin: 5px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .nav-tab:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #cccccc;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #4ecdc4;
+            box-shadow: 0 0 10px rgba(78, 205, 196, 0.3);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, #ff4757, #ff3838);
+        }
+
+        .data-table {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th, .table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .table th {
+            background: rgba(255, 255, 255, 0.2);
+            font-weight: 600;
+            color: #4ecdc4;
+        }
+
+        .table tr:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .status-active {
+            color: #4ecdc4;
+            font-weight: bold;
+        }
+
+        .status-completed {
+            color: #ffa726;
+            font-weight: bold;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .alert-success {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+            border: 1px solid #4caf50;
+        }
+
+        .alert-error {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+            border: 1px solid #f44336;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4ecdc4;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #cccccc;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 MoneBux Admin Panel</h1>
+            <p>Manage your platform with ease</p>
+        </div>
+
+        <div id="alert-container"></div>
+
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-value" id="total-users">0</div>
+                <div class="stat-label">Total Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="active-giveaways">0</div>
+                <div class="stat-label">Active Giveaways</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="pending-withdrawals">0</div>
+                <div class="stat-label">Pending Withdrawals</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="total-tasks">0</div>
+                <div class="stat-label">Total Tasks</div>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('categories')">Categories</button>
+            <button class="nav-tab" onclick="showTab('tasks')">Tasks</button>
+            <button class="nav-tab" onclick="showTab('giveaways')">Giveaways</button>
+            <button class="nav-tab" onclick="showTab('withdrawals')">Withdrawals</button>
+        </div>
+
+        <!-- Categories Tab -->
+        <div id="categories" class="tab-content active">
+            <div class="form-container">
+                <h2>Add New Category</h2>
+                <form id="category-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="category-name">Category Name</label>
+                            <input type="text" id="category-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="category-icon">Icon URL</label>
+                            <input type="url" id="category-icon" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn">Add Category</button>
+                </form>
+            </div>
+
+            <div class="data-table">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Icon</th>
+                            <th>Name</th>
+                            <th>Tasks Count</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="categories-table">
+                        <!-- Categories will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tasks Tab -->
+        <div id="tasks" class="tab-content">
+            <div class="form-container">
+                <h2>Add New Task</h2>
+                <form id="task-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="task-title">Task Title</label>
+                            <input type="text" id="task-title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="task-category">Category</label>
+                            <select id="task-category" required>
+                                <option value="">Select Category</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-description">Description</label>
+                        <textarea id="task-description" required></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="task-reward-type">Reward Type</label>
+                            <select id="task-reward-type" required>
+                                <option value="">Select Type</option>
+                                <option value="ticket">Ticket</option>
+                                <option value="gold">Gold</option>
+                                <option value="ton">TON</option>
+                                <option value="usdt">USDT</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="task-reward-amount">Reward Amount</label>
+                            <input type="number" id="task-reward-amount" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="task-icon">Icon URL</label>
+                            <input type="url" id="task-icon" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="task-link">Task Link</label>
+                            <input type="url" id="task-link" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn">Add Task</button>
+                </form>
+            </div>
+
+            <div class="data-table">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Icon</th>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Reward</th>
+                            <th>Completions</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tasks-table">
+                        <!-- Tasks will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Giveaways Tab -->
+        <div id="giveaways" class="tab-content">
+            <div class="form-container">
+                <h2>Create New Giveaway</h2>
+                <form id="giveaway-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="giveaway-title">Giveaway Title</label>
+                            <input type="text" id="giveaway-title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="giveaway-icon">Icon URL</label>
+                            <input type="url" id="giveaway-icon" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="ticket-price">Ticket Price (Tickets)</label>
+                            <input type="number" id="ticket-price" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="total-tickets">Total Tickets Needed</label>
+                            <input type="number" id="total-tickets" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="prize-type">Prize Type</label>
+                            <select id="prize-type" required>
+                                <option value="">Select Type</option>
+                                <option value="ton">TON</option>
+                                <option value="usdt">USDT</option>
+                                <option value="gold">Gold</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="prize-amount">Prize Amount</label>
+                            <input type="number" id="prize-amount" step="0.01" min="0.01" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn">Create Giveaway</button>
+                </form>
+            </div>
+
+            <div class="data-table">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Icon</th>
+                            <th>Title</th>
+                            <th>Progress</th>
+                            <th>Prize</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="giveaways-table">
+                        <!-- Giveaways will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Withdrawals Tab -->
+        <div id="withdrawals" class="tab-content">
+            <div class="data-table">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Username</th>
+                            <th>Amount</th>
+                            <th>Type</th>
+                            <th>Wallet</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="withdrawals-table">
+                        <!-- Withdrawals will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import Firebase
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getDatabase, ref, set, push, onValue, remove, update } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDHpiJavjopegeZO-nAGVjWjM-zmjJk07w",
+            authDomain: "monebux-my-clint.firebaseapp.com",
+            databaseURL: "https://monebux-my-clint-default-rtdb.firebaseio.com",
+            projectId: "monebux-my-clint",
+            storageBucket: "monebux-my-clint.firebasestorage.app",
+            messagingSenderId: "908326371450",
+            appId: "1:908326371450:web:57ffb3de904d0400007bc3"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Global variables
+        let categories = {};
+        let tasks = {};
+        let giveaways = {};
+        let withdrawals = {};
+        let users = {};
+
+        // Show alert function
+        function showAlert(message, type = 'success') {
+            const alertContainer = document.getElementById('alert-container');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            alertContainer.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+
+        // Tab switching function
+        window.showTab = function(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Load categories
+        function loadCategories() {
+            const categoriesRef = ref(db, 'categories');
+            onValue(categoriesRef, (snapshot) => {
+                categories = snapshot.val() || {};
+                renderCategories();
+                updateTaskCategorySelect();
+            });
+        }
+
+        // Render categories table
+        function renderCategories() {
+            const tbody = document.getElementById('categories-table');
+            tbody.innerHTML = '';
+            
+            Object.entries(categories).forEach(([id, category]) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><img src="${category.icon}" alt="Icon" style="width: 40px; height: 40px; border-radius: 8px;"></td>
+                    <td>${category.name}</td>
+                    <td><span class="status-active">${Object.values(tasks).filter(t => t.categoryId === id).length}</span></td>
+                    <td>
+                        <button class="btn btn-danger" onclick="deleteCategory('${id}')">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Update task category select
+        function updateTaskCategorySelect() {
+            const select = document.getElementById('task-category');
+            select.innerHTML = '<option value="">Select Category</option>';
+            
+            Object.entries(categories).forEach(([id, category]) => {
+                const option = document.createElement('option');
+                option.value = id;
+                option.textContent = category.name;
+                select.appendChild(option);
+            });
+        }
+
+        // Add category
+        document.getElementById('category-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('category-name').value;
+            const icon = document.getElementById('category-icon').value;
+            
+            try {
+                const categoriesRef = ref(db, 'categories');
+                const newCategoryRef = push(categoriesRef);
+                await set(newCategoryRef, {
+                    name,
+                    icon,
+                    createdAt: Date.now()
+                });
+                
+                showAlert('Category added successfully!');
+                document.getElementById('category-form').reset();
+            } catch (error) {
+                showAlert('Error adding category: ' + error.message, 'error');
+            }
+        });
+
+        // Delete category
+        window.deleteCategory = async function(categoryId) {
+            if (confirm('Are you sure you want to delete this category?')) {
+                try {
+                    await remove(ref(db, `categories/${categoryId}`));
+                    showAlert('Category deleted successfully!');
+                } catch (error) {
+                    showAlert('Error deleting category: ' + error.message, 'error');
+                }
+            }
+        }
+
+        // Load tasks
+        function loadTasks() {
+            const tasksRef = ref(db, 'tasks');
+            onValue(tasksRef, (snapshot) => {
+                tasks = snapshot.val() || {};
+                renderTasks();
+            });
+        }
+
+        // Render tasks table
+        function renderTasks() {
+            const tbody = document.getElementById('tasks-table');
+            tbody.innerHTML = '';
+            
+            Object.entries(tasks).forEach(([id, task]) => {
+                const category = categories[task.categoryId] || { name: 'Unknown' };
+                const completions = Object.keys(task.completions || {}).length;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><img src="${task.icon}" alt="Icon" style="width: 40px; height: 40px; border-radius: 8px;"></td>
+                    <td>${task.title}</td>
+                    <td>${category.name}</td>
+                    <td><span class="status-active">${task.rewardAmount} ${task.rewardType.toUpperCase()}</span></td>
+                    <td><span class="status-completed">${completions}</span></td>
+                    <td>
+                        <button class="btn btn-danger" onclick="deleteTask('${id}')">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Add task
+        document.getElementById('task-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const title = document.getElementById('task-title').value;
+            const description = document.getElementById('task-description').value;
+            const categoryId = document.getElementById('task-category').value;
+            const rewardType = document.getElementById('task-reward-type').value;
+            const rewardAmount = parseFloat(document.getElementById('task-reward-amount').value);
+            const icon = document.getElementById('task-icon').value;
+            const link = document.getElementById('task-link').value;
+            
+            try {
+                const tasksRef = ref(db, 'tasks');
+                const newTaskRef = push(tasksRef);
+                await set(newTaskRef, {
+                    title,
+                    description,
+                    categoryId,
+                    rewardType,
+                    rewardAmount,
+                    icon,
+                    link,
+                    createdAt: Date.now(),
+                    completions: {}
+                });
+                
+                showAlert('Task added successfully!');
+                document.getElementById('task-form').reset();
+            } catch (error) {
+                showAlert('Error adding task: ' + error.message, 'error');
+            }
+        });
+
+        // Delete task
+        window.deleteTask = async function(taskId) {
+            if (confirm('Are you sure you want to delete this task?')) {
+                try {
+                    await remove(ref(db, `tasks/${taskId}`));
+                    showAlert('Task deleted successfully!');
+                } catch (error) {
+                    showAlert('Error deleting task: ' + error.message, 'error');
+                }
+            }
+        }
+
+        // Load giveaways
+        function loadGiveaways() {
+            const giveawaysRef = ref(db, 'giveaways');
+            onValue(giveawaysRef, (snapshot) => {
+                giveaways = snapshot.val() || {};
+                renderGiveaways();
+                updateStats();
+            });
+        }
+
+        // Render giveaways table
+        function renderGiveaways() {
+            const tbody = document.getElementById('giveaways-table');
+            tbody.innerHTML = '';
+            
+            Object.entries(giveaways).forEach(([id, giveaway]) => {
+                const participants = Object.keys(giveaway.participants || {}).length;
+                const progress = Math.round((participants / giveaway.totalTickets) * 100);
+                const status = giveaway.completed ? 'Completed' : 'Active';
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><img src="${giveaway.icon}" alt="Icon" style="width: 40px; height: 40px; border-radius: 8px;"></td>
+                    <td>${giveaway.title}</td>
+                    <td><span class="status-active">${participants}/${giveaway.totalTickets} (${progress}%)</span></td>
+                    <td><span class="status-completed">${giveaway.prizeAmount} ${giveaway.prizeType.toUpperCase()}</span></td>
+                    <td><span class="${giveaway.completed ? 'status-completed' : 'status-active'}">${status}</span></td>
+                    <td>
+                        ${!giveaway.completed ? `<button class="btn btn-danger" onclick="deleteGiveaway('${id}')">Delete</button>` : 'Completed'}
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Add giveaway
+        document.getElementById('giveaway-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const title = document.getElementById('giveaway-title').value;
+            const icon = document.getElementById('giveaway-icon').value;
+            const ticketPrice = parseInt(document.getElementById('ticket-price').value);
+            const totalTickets = parseInt(document.getElementById('total-tickets').value);
+            const prizeType = document.getElementById('prize-type').value;
+            const prizeAmount = parseFloat(document.getElementById('prize-amount').value);
+            
+            try {
+                const giveawaysRef = ref(db, 'giveaways');
+                const newGiveawayRef = push(giveawaysRef);
+                await set(newGiveawayRef, {
+                    title,
+                    icon,
+                    ticketPrice,
+                    totalTickets,
+                    prizeType,
+                    prizeAmount,
+                    createdAt: Date.now(),
+                    completed: false,
+                    participants: {},
+                    winner: null
+                });
+                
+                showAlert('Giveaway created successfully!');
+                document.getElementById('giveaway-form').reset();
+            } catch (error) {
+                showAlert('Error creating giveaway: ' + error.message, 'error');
+            }
+        });
+
+        // Delete giveaway
+        window.deleteGiveaway = async function(giveawayId) {
+            if (confirm('Are you sure you want to delete this giveaway?')) {
+                try {
+                    await remove(ref(db, `giveaways/${giveawayId}`));
+                    showAlert('Giveaway deleted successfully!');
+                } catch (error) {
+                    showAlert('Error deleting giveaway: ' + error.message, 'error');
+                }
+            }
+        }
+
+        // Load withdrawals
+        function loadWithdrawals() {
+            const withdrawalsRef = ref(db, 'withdrawals');
+            onValue(withdrawalsRef, (snapshot) => {
+                withdrawals = snapshot.val() || {};
+                renderWithdrawals();
+            });
+        }
+
+        // Render withdrawals table
+        function renderWithdrawals() {
+            const tbody = document.getElementById('withdrawals-table');
+            tbody.innerHTML = '';
+            
+            Object.entries(withdrawals).forEach(([id, withdrawal]) => {
+                if (withdrawal.status === 'pending') {
+                    const user = users[withdrawal.userId] || {};
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${withdrawal.userId}</td>
+                        <td>${user.username || 'Unknown'}</td>
+                        <td><span class="status-active">${withdrawal.amount} ${withdrawal.type.toUpperCase()}</span></td>
+                        <td>${withdrawal.type.toUpperCase()}</td>
+                        <td>${withdrawal.wallet}</td>
+                        <td>${new Date(withdrawal.createdAt).toLocaleDateString()}</td>
+                        <td>
+                            <button class="btn" onclick="approveWithdrawal('${id}')">Approve</button>
+                            <button class="btn btn-danger" onclick="rejectWithdrawal('${id}')">Reject</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                }
+            });
+        }
+
+        // Approve withdrawal
+        window.approveWithdrawal = async function(withdrawalId) {
+            try {
+                await update(ref(db, `withdrawals/${withdrawalId}`), {
+                    status: 'approved',
+                    processedAt: Date.now()
+                });
+                showAlert('Withdrawal approved successfully!');
+            } catch (error) {
+                showAlert('Error approving withdrawal: ' + error.message, 'error');
+            }
+        }
+
+        // Reject withdrawal
+        window.rejectWithdrawal = async function(withdrawalId) {
+            try {
+                const withdrawal = withdrawals[withdrawalId];
+                
+                // Return amount to user balance
+                const userBalanceRef = ref(db, `users/${withdrawal.userId}/balance/${withdrawal.type}`);
+                const currentBalance = users[withdrawal.userId]?.balance?.[withdrawal.type] || 0;
+                await set(userBalanceRef, currentBalance + withdrawal.amount);
+                
+                // Update withdrawal status
+                await update(ref(db, `withdrawals/${withdrawalId}`), {
+                    status: 'rejected',
+                    processedAt: Date.now()
+                });
+                
+                showAlert('Withdrawal rejected and amount returned to user!');
+            } catch (error) {
+                showAlert('Error rejecting withdrawal: ' + error.message, 'error');
+            }
+        }
+
+        // Load users
+        function loadUsers() {
+            const usersRef = ref(db, 'users');
+            onValue(usersRef, (snapshot) => {
+                users = snapshot.val() || {};
+                updateStats();
+            });
+        }
+
+        // Update stats
+        function updateStats() {
+            document.getElementById('total-users').textContent = Object.keys(users).length;
+            document.getElementById('active-giveaways').textContent = Object.values(giveaways).filter(g => !g.completed).length;
+            document.getElementById('pending-withdrawals').textContent = Object.values(withdrawals).filter(w => w.status === 'pending').length;
+            document.getElementById('total-tasks').textContent = Object.keys(tasks).length;
+        }
+
+        // Initialize the admin panel
+        function init() {
+            loadCategories();
+            loadTasks();
+            loadGiveaways();
+            loadWithdrawals();
+            loadUsers();
+        }
+
+        // Start the application
+        init();
+    </script>
+</body>
+</html>
