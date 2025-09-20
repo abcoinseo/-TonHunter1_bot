@@ -4,12 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MoneBux - Earn & Win</title>
-    <!-- Google Material Icons -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!-- Telegram WebApp JS -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
-        /* Global Styles */
+        /* --- General Styles --- */
+        :root {
+            --primary-gradient: linear-gradient(45deg, #4ecdc4, #44a08d);
+            --secondary-gradient: linear-gradient(45deg, #667eea, #764ba2);
+            --accent-gradient: linear-gradient(45deg, #ff6b6b, #ff7979);
+            --danger-gradient: linear-gradient(45deg, #ff4757, #ff3838);
+            --background-dark: #1a1a1a;
+            --background-card: rgba(255, 255, 255, 0.08);
+            --background-hover: rgba(255, 255, 255, 0.12);
+            --border-color: rgba(255, 255, 255, 0.15);
+            --text-muted: #cccccc;
+            --text-highlight: #4ecdc4;
+            --text-secondary: #ffa726;
+            --blur-backdrop: blur(10px);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -18,26 +31,31 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #1a1a1a;
+            background: var(--background-dark);
             color: #ffffff;
             min-height: 100vh;
-            overflow-x: hidden; /* Prevent horizontal scroll */
+            padding-bottom: 80px;
+            overflow-x: hidden;
             display: flex;
             flex-direction: column;
         }
 
-        /* Header Styles */
+        .material-icons {
+            vertical-align: middle;
+        }
+
+        /* --- Header --- */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 15px 20px;
             background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            position: sticky; /* Make header sticky */
+            backdrop-filter: var(--blur-backdrop);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
             top: 0;
-            z-index: 100; /* Ensure it stays above other content */
+            z-index: 100;
         }
 
         .balance-container {
@@ -50,83 +68,73 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--background-card);
             padding: 8px 16px;
             border-radius: 25px;
             font-weight: 600;
             font-size: 0.9rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
         .balance-item .material-icons {
-            font-size: 20px;
-            color: #ffffff;
+            font-size: 1.2rem;
+            color: var(--text-highlight); /* Default highlight */
         }
+        .balance-item .material-icons.gold-icon { color: var(--text-secondary); }
+        .balance-item .material-icons.ton-icon { color: #28A0EF; } /* TON specific color */
+        .balance-item .material-icons.usdt-icon { color: #00fc83; } /* USDT specific color */
 
-        .balance-item .ticket-icon { color: #ff4757; }
-        .balance-item .gold-icon { color: #ffa726; }
-        .balance-item .ton-icon { color: #0077ff; } /* Example TON color */
-        .balance-item .usdt-icon { color: #007bff; } /* Example USDT color */
 
         .menu-btn {
             background: none;
             border: none;
             color: #ffffff;
-            font-size: 24px;
+            font-size: 28px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
             padding: 5px;
         }
 
-        /* Main Content Area */
-        .main-content {
-            flex-grow: 1; /* Allow main content to take available space */
-            padding-bottom: 80px; /* Space for bottom nav */
-        }
-
+        /* --- Main Content Container --- */
         .container {
+            padding: 20px;
             max-width: 500px;
             margin: 0 auto;
-            padding: 20px;
             width: 100%;
+            flex-grow: 1; /* Allows content to take available space */
         }
 
         .section-title {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             margin-bottom: 20px;
-            color: #ffffff;
+            color: var(--text-highlight);
             display: flex;
             align-items: center;
             gap: 10px;
             font-weight: 700;
         }
 
-        .section-title .material-icons {
-            font-size: 28px;
-            color: #4ecdc4;
-        }
-
-        /* Card Styles */
+        /* --- Cards --- */
         .card {
-            background: rgba(255, 255, 255, 0.08);
+            background: var(--background-card);
             border-radius: 15px;
             padding: 20px;
             margin-bottom: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            backdrop-filter: var(--blur-backdrop);
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
 
         .card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
         }
 
-        /* Giveaway Card */
+        /* --- Giveaways --- */
         .giveaway-card {
             position: relative;
             overflow: hidden;
+            border: 2px solid var(--text-highlight);
         }
 
         .giveaway-header {
@@ -137,96 +145,91 @@
         }
 
         .giveaway-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
             object-fit: cover;
-            flex-shrink: 0;
+            border: 2px solid var(--border-color);
         }
 
         .giveaway-info h3 {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             margin-bottom: 5px;
-            color: #e0e0e0;
+            color: var(--text-highlight);
         }
 
         .prize-info {
-            color: #4ecdc4;
+            color: var(--text-secondary);
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 1rem;
         }
 
         .progress-bar {
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--background-card);
             border-radius: 10px;
             height: 10px;
             margin: 15px 0;
             overflow: hidden;
-            position: relative; /* For text overlay */
+            border: 1px solid var(--border-color);
         }
 
         .progress-fill {
-            background: linear-gradient(90deg, #4ecdc4, #44a08d);
+            background: var(--primary-gradient);
             height: 100%;
             border-radius: 10px;
             transition: width 0.5s ease;
-            position: absolute;
-            top: 0;
-            left: 0;
         }
 
         .progress-text {
             display: flex;
             justify-content: space-between;
             font-size: 0.9rem;
-            color: #cccccc;
-            margin-top: 5px;
+            color: var(--text-muted);
+            margin-top: 8px;
         }
 
         .participate-btn {
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            background: var(--secondary-gradient);
             color: white;
             border: none;
             padding: 12px 20px;
             border-radius: 25px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             width: 100%;
-            margin-top: 10px;
+            margin-top: 15px;
             transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             font-size: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
         }
 
         .participate-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
         }
 
         .participate-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
             background: #666;
+            cursor: not-allowed;
+            opacity: 0.6;
         }
 
         .my-tickets {
             text-align: center;
-            margin-top: 10px;
-            padding: 8px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
+            margin-top: 15px;
+            padding: 10px;
+            background: var(--background-card);
+            border-radius: 10px;
             font-size: 0.9rem;
-            color: #cccccc;
+            border: 1px solid var(--border-color);
         }
 
-        /* Task Card */
+        /* --- Tasks --- */
         .task-card {
             display: flex;
             align-items: center;
             gap: 15px;
+            flex-wrap: wrap; /* Allow wrapping for small screens */
         }
 
         .task-icon {
@@ -235,45 +238,45 @@
             border-radius: 12px;
             object-fit: cover;
             flex-shrink: 0;
+            border: 1px solid var(--border-color);
         }
 
         .task-info {
             flex-grow: 1;
+            min-width: 180px; /* Prevent shrinking too much */
         }
 
         .task-title {
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             margin-bottom: 5px;
-            color: #e0e0e0;
+            color: var(--text-highlight);
+            font-weight: 600;
         }
 
         .task-description {
-            color: #cccccc;
+            color: var(--text-muted);
             font-size: 0.9rem;
             margin-bottom: 8px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
         }
 
         .task-reward {
-            color: #4ecdc4;
+            color: var(--text-highlight);
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
         }
 
         .task-btn {
-            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            background: var(--primary-gradient);
             color: white;
             border: none;
-            padding: 10px 16px;
+            padding: 10px 20px;
             border-radius: 20px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             flex-shrink: 0;
             transition: all 0.3s ease;
             font-size: 0.95rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
         .task-btn:hover {
@@ -283,71 +286,80 @@
         .task-btn:disabled {
             background: #666;
             cursor: not-allowed;
+            opacity: 0.6;
         }
 
-        /* Category Filter */
         .category-filter {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             margin-bottom: 20px;
             overflow-x: auto;
             padding-bottom: 10px;
-            scroll-behavior: smooth;
+            scrollbar-width: thin; /* For Firefox */
+            scrollbar-color: var(--background-card) transparent; /* For Firefox */
         }
 
         .category-filter::-webkit-scrollbar {
-            height: 5px;
+            height: 6px;
         }
-
         .category-filter::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+            background: transparent;
         }
-
         .category-filter::-webkit-scrollbar-thumb {
-            background: #4ecdc4;
-            border-radius: 10px;
+            background-color: var(--background-card);
+            border-radius: 3px;
         }
 
         .category-btn {
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--background-card);
             border: none;
             color: #ffffff;
-            padding: 8px 16px;
+            padding: 10px 20px;
             border-radius: 20px;
             cursor: pointer;
             white-space: nowrap;
             transition: all 0.3s ease;
-            font-size: 0.9rem;
-            flex-shrink: 0;
+            font-weight: 500;
         }
 
         .category-btn:hover, .category-btn.active {
-            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            background: var(--primary-gradient);
             color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
-        /* Ad Container */
+        /* --- Ad Card --- */
         .ad-container {
             text-align: center;
-            margin-bottom: 20px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 15px;
             padding: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: radial-gradient(circle, rgba(255, 167, 38, 0.1) 0%, rgba(255, 167, 38, 0) 70%);
+            border-radius: 15px;
+            border: 1px solid var(--text-secondary);
         }
 
         .ad-reward {
-            background: linear-gradient(45deg, #f5a623, #f88a12);
+            background: var(--text-secondary);
             color: white;
             padding: 12px;
             border-radius: 10px;
             margin-bottom: 15px;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 1rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
-        /* Friends Section */
+        .ad-container .task-btn { /* Reusing task-btn style */
+            background: var(--primary-gradient); /* Match task buttons */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        #ads-watched {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* --- Friends --- */
         .friends-header {
             text-align: center;
             margin-bottom: 30px;
@@ -356,62 +368,64 @@
         .friends-count {
             font-size: 2.5rem;
             font-weight: bold;
-            color: #4ecdc4;
-            margin-bottom: 5px;
+            color: var(--text-highlight);
+            margin-bottom: 10px;
         }
 
         .refer-card {
             text-align: center;
+            background: var(--background-card);
+            border: 2px solid var(--border-color);
         }
 
         .refer-reward {
-            background: rgba(255, 255, 255, 0.08);
             padding: 15px;
             border-radius: 10px;
             margin: 15px 0;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0,0,0,0.3);
         }
 
         .refer-percentage {
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: bold;
-            color: #4ecdc4;
+            color: var(--text-highlight);
             margin-bottom: 10px;
         }
 
         .invite-btn {
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            background: var(--secondary-gradient);
             color: white;
             border: none;
             padding: 15px 30px;
             border-radius: 25px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             width: 100%;
-            margin: 10px 0;
+            margin: 15px 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 15px;
             transition: all 0.3s ease;
             font-size: 1.1rem;
-        }
-
-        .invite-btn .material-icons {
-            font-size: 24px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
 
         .invite-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .invite-btn .material-icons {
+            font-size: 1.5rem;
         }
 
         .claim-section {
-            margin-top: 20px;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.05);
+            margin-top: 25px;
+            padding: 20px;
+            background: var(--background-card);
             border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
         }
 
         .claim-amount {
@@ -419,51 +433,38 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
-            color: #cccccc;
-            flex-wrap: wrap;
-            gap: 10px;
+            font-size: 1rem;
+            color: var(--text-muted);
         }
+        .claim-amount span:first-child { font-weight: 600; color: white;}
+        .claim-amount span:last-child { color: var(--text-highlight); font-weight: 700; font-size: 1.1rem;}
 
-        .claim-amount span:first-child {
-            font-weight: 500;
-        }
 
         .claim-btn {
-            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            background: var(--primary-gradient);
             color: white;
             border: none;
             padding: 12px 24px;
             border-radius: 25px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             width: 100%;
             font-size: 1rem;
-            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
-        .claim-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .claim-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            background: #666;
-        }
-
-        /* History Section */
-        .history-card {
-            margin-top: 30px;
-        }
-
+        /* --- Winners History --- */
         .history-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 0.9rem;
+            padding: 15px 5px; /* Slightly less padding for list */
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.3s ease;
+        }
+        .history-item:hover {
+            background-color: var(--background-hover);
+            border-radius: 8px;
         }
 
         .history-item:last-child {
@@ -472,41 +473,40 @@
 
         .history-user {
             font-weight: 600;
-            color: #e0e0e0;
+            color: var(--text-highlight);
             display: flex;
             align-items: center;
             gap: 8px;
         }
+        .history-user .material-icons {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
 
         .history-prize {
-            color: #4ecdc4;
-            font-weight: 600;
+            color: var(--text-secondary);
+            font-weight: 700;
+            background: rgba(255,167,38,0.15);
+            padding: 5px 10px;
+            border-radius: 15px;
         }
 
-        .history-status {
-            font-weight: 500;
-            text-transform: capitalize;
-        }
-
-        .history-status.pending { color: #ffa726; }
-        .history-status.approved { color: #66bb6a; }
-        .history-status.rejected { color: #ef5350; }
-
-        /* Modal Styles */
+        /* --- Modals --- */
         .modal {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.85);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 1000;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            backdrop-filter: blur(8px);
         }
 
         .modal.active {
@@ -519,143 +519,147 @@
             padding: 30px;
             border-radius: 15px;
             text-align: center;
-            max-width: 350px;
             width: 90%;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            max-width: 350px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+            border: 2px solid var(--primary-gradient);
         }
 
         .modal-title {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             margin-bottom: 15px;
-            color: #4ecdc4;
+            color: var(--text-highlight);
             font-weight: 700;
         }
 
         .modal-message {
-            margin-bottom: 20px;
-            line-height: 1.5;
-            color: #e0e0e0;
-            font-size: 1rem;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+
+        .modal-btn-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
         }
 
         .modal-btn {
-            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            background: var(--primary-gradient);
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 25px;
             border-radius: 20px;
             cursor: pointer;
-            margin: 5px;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 1rem;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .modal-btn.cancel {
+            background: var(--background-card);
+            border: 1px solid var(--border-color);
+            color: white;
         }
 
         .modal-btn:hover {
-            transform: scale(1.05);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+        }
+        .modal-btn.cancel:hover {
+            background: var(--background-hover);
+            transform: translateY(-2px);
         }
 
-        .modal-btn.secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-        }
-
-        .modal-btn.secondary:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
 
         .countdown {
-            font-size: 1.2rem;
-            color: #ffa726;
+            font-size: 1.5rem;
+            color: var(--text-secondary);
             font-weight: bold;
-            margin: 10px 0;
+            margin: 15px 0;
+            text-shadow: 0 0 5px rgba(255,167,38,0.5);
         }
 
-        /* Forms */
-        .form-group {
+        /* --- Withdrawals Modal --- */
+        .withdrawal-modal-content {
+            width: 90%;
+            max-width: 400px;
+            background: #2a2a2a;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+            border: 2px solid var(--secondary-gradient);
+        }
+
+        .withdrawal-modal-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .form-group-modal {
             margin-bottom: 15px;
             text-align: left;
         }
 
-        .form-group label {
+        .form-group-modal label {
             display: block;
             margin-bottom: 8px;
+            color: var(--text-muted);
             font-weight: 500;
-            color: #cccccc;
-            font-size: 0.95rem;
         }
 
-        .form-group input,
-        .form-group select {
+        .form-group-modal input,
+        .form-group-modal select {
             width: 100%;
             padding: 12px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: var(--background-card);
+            border: 1px solid var(--border-color);
             border-radius: 10px;
-            color: #ffffff;
+            color: white;
             font-size: 1rem;
             transition: all 0.3s ease;
         }
 
-        .form-group input:focus,
-        .form-group select:focus {
+        .form-group-modal input:focus,
+        .form-group-modal select:focus {
             outline: none;
-            border-color: #4ecdc4;
-            box-shadow: 0 0 10px rgba(78, 205, 196, 0.3);
+            border-color: var(--primary-gradient);
+            box-shadow: 0 0 12px rgba(78, 205, 196, 0.4);
         }
 
-        .form-actions {
-            margin-top: 20px;
+        .form-group-modal select {
+            appearance: none; /* Remove default dropdown arrow */
+            background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%23ffffff" d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 12px top 50%;
+            background-size: 16px;
+        }
+
+        .withdrawal-modal-btn-wrapper {
             display: flex;
             justify-content: center;
             gap: 10px;
+            margin-top: 25px;
         }
 
-        .submit-btn {
-            background: linear-gradient(45deg, #4ecdc4, #44a08d);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 25px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .cancel-btn {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 25px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .cancel-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        /* Bottom Navigation */
+        /* --- Bottom Navigation --- */
         .bottom-nav {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
             background: rgba(26, 26, 26, 0.95);
-            backdrop-filter: blur(10px);
+            backdrop-filter: var(--blur-backdrop);
             display: flex;
             justify-content: space-around;
             padding: 12px 0;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid var(--border-color);
             z-index: 100;
         }
 
@@ -663,29 +667,28 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 5px;
-            color: #888;
+            gap: 6px;
+            color: var(--text-muted);
             text-decoration: none;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             transition: all 0.3s ease;
-            padding: 5px 10px;
-            border-radius: 10px;
+            padding: 8px 12px;
+            border-radius: 15px;
         }
 
         .nav-item.active {
-            color: #4ecdc4;
-            background: rgba(78, 205, 196, 0.1);
+            color: var(--text-highlight);
+            background: var(--background-card);
         }
 
         .nav-icon {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
         }
 
-        /* Page Transitions */
+        /* --- Page Animations --- */
         .page {
             display: none;
-            animation: fadeIn 0.3s ease-in;
-            flex-grow: 1; /* Make pages fill available space */
+            animation: fadeIn 0.4s ease-in-out;
         }
 
         .page.active {
@@ -693,44 +696,118 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Media Queries */
-        @media (max-width: 480px) {
-            .header { padding: 10px 15px; }
-            .balance-container { gap: 10px; }
-            .balance-item { padding: 6px 12px; font-size: 0.8rem; }
-            .balance-item .material-icons { font-size: 18px; }
-            .menu-btn { font-size: 20px; }
-            .container { padding: 15px; }
-            .section-title { font-size: 1.3rem; }
-            .card { padding: 15px; }
-            .participate-btn { padding: 10px 15px; font-size: 0.95rem; }
-            .bottom-nav { padding: 10px 0; }
-            .nav-icon { font-size: 1.5rem; }
-            .nav-item { font-size: 0.7rem; }
-            .friends-count { font-size: 2rem; }
+        /* --- Notifications (Toast) --- */
+        #notification-container {
+            position: fixed;
+            bottom: 100px; /* Above bottom nav */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
         }
 
-        @media (max-width: 320px) {
-            .balance-item { display: none; } /* Hide balances on very small screens */
-            .header { padding: 10px; }
-            .menu-btn { margin-left: auto; }
+        .notification {
+            background: rgba(34, 34, 34, 0.9);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            animation: slideInFromBottom 0.4s ease forwards, fadeOut 0.4s ease 3.6s forwards;
+            opacity: 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+        .notification.error {
+            border-left: 5px solid var(--danger-gradient);
+            background: rgba(255, 71, 87, 0.1);
+            color: #ff4757;
+        }
+        .notification.success {
+            border-left: 5px solid var(--primary-gradient);
+            background: rgba(78, 205, 196, 0.1);
+            color: var(--text-highlight);
+        }
+
+
+        @keyframes slideInFromBottom {
+            from { transform: translate(-50%, 100%); opacity: 0; }
+            to { transform: translate(-50%, 0); opacity: 1; }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; transform: translateY(20px); }
+        }
+
+        /* --- Responsive Adjustments --- */
+        @media (max-width: 480px) {
+            .header {
+                padding: 10px 15px;
+            }
+            .balance-container {
+                flex-direction: column;
+                gap: 8px;
+                align-items: flex-start;
+            }
+            .balance-item {
+                padding: 6px 12px;
+                font-size: 0.85rem;
+            }
+            .menu-btn {
+                font-size: 24px;
+            }
+            .container {
+                padding: 15px;
+            }
+            .section-title {
+                font-size: 1.4rem;
+            }
+            .card {
+                padding: 15px;
+            }
+            .participate-btn, .invite-btn, .claim-btn {
+                padding: 10px 15px;
+                font-size: 0.95rem;
+            }
+            .nav-item span {
+                font-size: 0.7rem;
+            }
+            .nav-icon {
+                font-size: 1.4rem;
+            }
+            .bottom-nav {
+                padding: 10px 0;
+            }
+            .modal-content {
+                padding: 20px;
+            }
+            .withdrawal-modal-content {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Notification Container -->
+    <div id="notification-container"></div>
+
     <!-- Header -->
     <div class="header">
         <div class="balance-container">
             <div class="balance-item">
-                <span class="material-icons ticket-icon">confirmation_number</span>
+                <span class="material-icons">local_activity</span>
                 <span id="ticket-balance">0.00</span>
             </div>
             <div class="balance-item">
-                <span class="material-icons gold-icon">star</span>
+                <span class="material-icons">diamond</span>
                 <span id="gold-balance">0.00</span>
             </div>
             <div class="balance-item">
@@ -738,108 +815,91 @@
                 <span id="ton-balance">0.00</span>
             </div>
             <div class="balance-item">
-                <span class="material-icons usdt-icon">account_balance_wallet</span>
+                <span class="material-icons usdt-icon">paid</span>
                 <span id="usdt-balance">0.00</span>
             </div>
         </div>
-        <button class="menu-btn" onclick="toggleMoreMenu()">
-            <span class="material-icons">more_vert</span>
+        <button class="menu-btn" onclick="openMenu()">
+            <span class="material-icons">menu</span>
         </button>
     </div>
 
-    <!-- Main Content Area -->
-    <div class="main-content">
-        <!-- Giveaways Page -->
-        <div id="giveaways-page" class="page active">
-            <div class="container">
-                <div class="section-title">
-                    <span class="material-icons">redeem</span> Giveaways
-                </div>
-                <div id="giveaways-container">
-                    <!-- Giveaways will be loaded here -->
-                </div>
+    <!-- Giveaways Page -->
+    <div id="giveaways-page" class="page active">
+        <div class="container">
+            <div class="section-title">
+                <span class="material-icons">card_giftcard</span> Active Giveaways
+            </div>
+            <div id="giveaways-container">
+                <!-- Giveaways will be loaded here -->
             </div>
         </div>
+    </div>
 
-        <!-- Tasks Page -->
-        <div id="tasks-page" class="page">
-            <div class="container">
-                <div class="section-title">
-                    <span class="material-icons">assignment_turned_in</span> Tasks
-                </div>
-                
-                <!-- Category Filter -->
-                <div class="category-filter" id="category-filter">
-                    <button class="category-btn active" onclick="filterTasks('all')">All</button>
-                </div>
-                
-                <!-- Daily Ad Task -->
-                <div class="card">
-                    <div class="ad-container">
-                        <div class="ad-reward">📺 Watch Ads - Earn 0.1 Tickets per ad</div>
-                        <button class="task-btn" onclick="watchAd()">Watch Ad</button>
-                        <div id="ads-watched">Today: 0/10 ads watched</div>
-                        <!-- Replace with your actual ad SDK script if needed -->
-                        <script src='//libtl.com/sdk.js' data-zone='9900905' data-sdk='show_9900905'></script>
-                    </div>
-                </div>
-                
-                <div id="tasks-container">
-                    <!-- Tasks will be loaded here -->
+    <!-- Tasks Page -->
+    <div id="tasks-page" class="page">
+        <div class="container">
+            <div class="section-title">
+                <span class="material-icons">star</span> Tasks
+            </div>
+            
+            <!-- Category Filter -->
+            <div class="category-filter" id="category-filter">
+                <button class="category-btn active" onclick="filterTasks('all')">All</button>
+            </div>
+            
+            <!-- Daily Ad Task -->
+            <div class="card">
+                <div class="ad-container">
+                    <div class="ad-reward">📺 Watch Ads - Earn 0.1 Tickets per ad</div>
+                    <button class="task-btn" onclick="watchAd()">Watch Ad</button>
+                    <div id="ads-watched">Today: 0/10 ads watched</div>
+                    <!-- IMPORTANT: Replace with your actual ad SDK integration if needed -->
+                    <!-- <script src='//libtl.com/sdk.js' data-zone='9900905' data-sdk='show_9900905'></script> -->
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">Ad reward may vary based on availability.</p>
                 </div>
             </div>
-        </div>
-
-        <!-- Friends Page -->
-        <div id="friends-page" class="page">
-            <div class="container">
-                <div class="friends-header">
-                    <div class="section-title">
-                        <span class="material-icons">group</span> Friends
-                    </div>
-                    <div class="friends-count" id="friends-count">0</div>
-                    <p>Earn income from your friends!</p>
-                </div>
-                
-                <div class="card refer-card">
-                    <div class="refer-reward">
-                        <div class="refer-percentage">10%</div>
-                        <p>You will receive 10% in tickets from your friends' earnings!</p>
-                    </div>
-                    
-                    <button class="invite-btn" onclick="inviteFriend()">
-                        <span class="material-icons">person_add</span> Invite a friend
-                    </button>
-                    
-                    <div class="claim-section">
-                        <div class="claim-amount">
-                            <span>Claimable:</span>
-                            <span id="claimable-amount">0.00 🎫 0.00 🏆</span>
-                        </div>
-                        <button class="claim-btn" id="claim-referral-btn" onclick="claimReferral()">Claim</button>
-                    </div>
-                </div>
-                
-                <div class="card history-card">
-                    <h3>Recent Winners</h3>
-                    <div id="recent-winners">
-                        <!-- Winners will be loaded here -->
-                    </div>
-                </div>
+            
+            <div id="tasks-container">
+                <!-- Tasks will be loaded here -->
             </div>
         </div>
+    </div>
 
-        <!-- History Page -->
-        <div id="history-page" class="page">
-            <div class="container">
-                <div class="section-title">
-                    <span class="material-icons">history</span> History
+    <!-- Friends Page -->
+    <div id="friends-page" class="page">
+        <div class="container">
+            <div class="friends-header">
+                <div class="section-title"><span class="material-icons">people</span> Friends</div>
+                <div class="friends-count" id="friends-count">0</div>
+                <p style="color: var(--text-muted);">Earn income from your friends!</p>
+            </div>
+            
+            <div class="card refer-card">
+                <div class="refer-reward">
+                    <div class="refer-percentage">10%</div>
+                    <p style="color: var(--text-muted);">You will receive 10% in tickets from your friends' earnings!</p>
                 </div>
-                <div class="card">
-                    <h3>Withdrawal History</h3>
-                    <div id="withdrawals-history-container">
-                        <!-- Withdrawal history will be loaded here -->
+                
+                <button class="invite-btn" onclick="inviteFriend()">
+                    <span class="material-icons">person_add</span> Invite a friend
+                </button>
+                
+                <div class="claim-section">
+                    <div class="claim-amount">
+                        <span>Claimable Rewards:</span>
+                        <span id="claimable-amount">0.00 🎫</span>
                     </div>
+                    <button class="claim-btn" onclick="claimReferral()">Claim Rewards</button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="section-title" style="font-size: 1.4rem;">
+                    <span class="material-icons">emoji_events</span> Recent Winners
+                </div>
+                <div id="recent-winners">
+                    <!-- Winners will be loaded here -->
                 </div>
             </div>
         </div>
@@ -848,35 +908,38 @@
     <!-- Bottom Navigation -->
     <div class="bottom-nav">
         <a href="#" class="nav-item" onclick="showPage('giveaways')">
-            <span class="material-icons nav-icon">redeem</span>
+            <span class="material-icons nav-icon">card_giftcard</span>
             <span>Giveaways</span>
         </a>
         <a href="#" class="nav-item" onclick="showPage('tasks')">
-            <span class="material-icons nav-icon">assignment_turned_in</span>
+            <span class="material-icons nav-icon">star</span>
             <span>Tasks</span>
         </a>
         <a href="#" class="nav-item" onclick="showPage('friends')">
-            <span class="material-icons nav-icon">group</span>
+            <span class="material-icons nav-icon">people</span>
             <span>Friends</span>
-        </a>
-        <a href="#" class="nav-item" onclick="showPage('history')">
-            <span class="material-icons nav-icon">history</span>
-            <span>History</span>
         </a>
     </div>
 
-    <!-- Modals -->
-
-    <!-- More Menu (Withdrawals, etc.) -->
-    <div id="more-menu-modal" class="modal">
-        <div class="modal-content" style="max-width: 280px;">
-            <div class="modal-title">More Options</div>
-            <button class="modal-btn secondary" onclick="openWithdrawalModal()">
-                <span class="material-icons" style="font-size: 20px; margin-right: 5px;">payment</span> Withdraw
-            </button>
-            <button class="modal-btn secondary" onclick="closeModal('more-menu-modal')">
-                Cancel
-            </button>
+    <!-- Menu Modal (for Profile, Withdrawals, History) -->
+    <div id="menu-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">Menu</div>
+            <div class="modal-message" style="text-align: left; color: var(--text-muted);">
+                <a href="#" class="menu-item-link" onclick="showProfile(); closeModal('menu-modal')">
+                    <span class="material-icons">account_circle</span> Profile
+                </a>
+                <a href="#" class="menu-item-link" onclick="openWithdrawalModal(); closeModal('menu-modal')">
+                    <span class="material-icons">payment</span> Withdraw
+                </a>
+                <a href="#" class="menu-item-link" onclick="showWithdrawalHistory(); closeModal('menu-modal')">
+                    <span class="material-icons">history</span> Withdrawal History
+                </a>
+                <!-- Add more menu items here if needed -->
+            </div>
+            <div class="modal-btn-wrapper">
+                <button class="modal-btn cancel" onclick="closeModal('menu-modal')">Close</button>
+            </div>
         </div>
     </div>
 
@@ -889,55 +952,60 @@
                 <div class="countdown" id="countdown">10</div>
                 <p>Waiting for completion...</p>
             </div>
-            <button class="modal-btn" onclick="completeTask()">Mark as Complete</button>
-            <button class="modal-btn secondary" onclick="closeModal('task-modal')">Cancel</button>
+            <div class="modal-btn-wrapper">
+                <button class="modal-btn" onclick="completeTask()">Mark as Complete</button>
+                <button class="modal-btn cancel" onclick="closeModal('task-modal')">Cancel</button>
+            </div>
         </div>
     </div>
 
-    <!-- Withdrawal Request Modal -->
+    <!-- Withdrawal Modal -->
     <div id="withdrawal-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-title">Withdraw Funds</div>
+        <div class="withdrawal-modal-content">
+            <div class="withdrawal-modal-title">Withdraw Funds</div>
             <form id="withdrawal-form">
-                <div class="form-group">
-                    <label for="withdraw-currency">Currency</label>
-                    <select id="withdraw-currency" required>
+                <div class="form-group-modal">
+                    <label for="withdrawal-type">Currency</label>
+                    <select id="withdrawal-type" required>
                         <option value="">Select Currency</option>
                         <option value="ton">TON</option>
                         <option value="usdt">USDT</option>
                         <option value="gold">Gold</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label for="withdraw-amount">Amount</label>
-                    <input type="number" id="withdraw-amount" step="0.01" required>
+                <div class="form-group-modal">
+                    <label for="withdrawal-amount">Amount</label>
+                    <input type="number" id="withdrawal-amount" step="0.01" min="1" placeholder="Enter amount" required>
                 </div>
-                <div class="form-group">
-                    <label for="withdraw-wallet">Wallet Address</label>
-                    <input type="text" id="withdraw-wallet" required>
+                <div class="form-group-modal">
+                    <label for="withdrawal-wallet">Wallet Address</label>
+                    <input type="text" id="withdrawal-wallet" placeholder="Enter your wallet address" required>
                 </div>
-                <div class="form-actions">
-                    <button type="submit" class="submit-btn">Request Withdrawal</button>
-                    <button type="button" class="cancel-btn" onclick="closeModal('withdrawal-modal')">Cancel</button>
+                <div class="withdrawal-modal-btn-wrapper">
+                    <button type="submit" class="modal-btn">Request Withdrawal</button>
+                    <button type="button" class="modal-btn cancel" onclick="closeModal('withdrawal-modal')">Cancel</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Generic Notification/Alert Modal -->
-    <div id="notification-modal" class="modal">
+    <!-- Withdrawal History Modal -->
+    <div id="history-modal" class="modal">
         <div class="modal-content">
-            <span class="material-icons" id="notification-icon" style="font-size: 48px; color: #4ecdc4;">info</span>
-            <div class="modal-title" id="notification-title">Notification</div>
-            <div class="modal-message" id="notification-message"></div>
-            <button class="modal-btn" onclick="closeModal('notification-modal')">OK</button>
+            <div class="withdrawal-modal-title">Withdrawal History</div>
+            <div id="history-list" style="max-height: 300px; overflow-y: auto; text-align: left;">
+                <!-- History items will be loaded here -->
+            </div>
+            <div class="modal-btn-wrapper">
+                <button class="modal-btn cancel" onclick="closeModal('history-modal')">Close</button>
+            </div>
         </div>
     </div>
 
     <script type="module">
         // Import Firebase
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getDatabase, ref, set, push, onValue, update, get, remove } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+        import { getDatabase, ref, set, push, onValue, update, get, query, orderByChild, equalTo } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 
         // Firebase Configuration
         const firebaseConfig = {
@@ -959,71 +1027,44 @@
         let giveaways = {};
         let tasks = {};
         let categories = {};
-        let withdrawals = {}; // For withdrawal history
         let currentTaskId = null;
         let adsWatched = 0;
-        const maxAdsPerDay = 10; // Configurable
-        let currentActivePage = 'giveaways'; // Track active page for nav
+        const maxAdsPerDay = 10;
+        let referralListener = null; // To manage referral data listener
+        let withdrawalHistoryListener = null; // To manage withdrawal history listener
 
-        // --- Telegram WebApp Initialization ---
+        // Telegram WebApp initialization
         let tg = window.Telegram?.WebApp;
         if (tg) {
             tg.ready();
             tg.expand();
-            tg.enableClosingConfirmation(); // Optional: Ask before closing
         }
 
-        // --- Utility Functions ---
-        function closeModal(modalId = 'notification-modal') {
-            document.getElementById(modalId).classList.remove('active');
-        }
+        // --- Firebase References ---
+        const usersRef = ref(db, 'users');
+        const categoriesRef = ref(db, 'categories');
+        const tasksRef = ref(db, 'tasks');
+        const giveawaysRef = ref(db, 'giveaways');
+        const winnersRef = ref(db, 'winners');
+        const withdrawalsRef = ref(db, 'withdrawals');
 
-        function showModal(modalId = 'notification-modal') {
-            document.getElementById(modalId).classList.add('active');
-        }
-
-        function showNotification(message, type = 'info', title = 'Notification') {
-            const modal = document.getElementById('notification-modal');
-            const iconMap = {
-                'success': 'check_circle',
-                'error': 'error',
-                'info': 'info',
-                'warning': 'warning'
-            };
-            const colorMap = {
-                'success': '#4ecdc4',
-                'error': '#ef5350',
-                'info': '#42a5f5',
-                'warning': '#ffa726'
-            };
-
-            document.getElementById('notification-icon').textContent = iconMap[type] || 'info';
-            document.getElementById('notification-icon').style.color = colorMap[type] || '#42a5f5';
-            document.getElementById('notification-title').textContent = title;
-            document.getElementById('notification-message').textContent = message;
-            showModal('notification-modal');
-        }
-
-        // --- Balance Display and Update ---
-        function updateBalanceDisplay(balance) {
-            document.getElementById('ticket-balance').textContent = (balance?.ticket || 0).toFixed(2);
-            document.getElementById('gold-balance').textContent = (balance?.gold || 0).toFixed(2);
-            document.getElementById('ton-balance').textContent = (balance?.ton || 0).toFixed(2);
-            document.getElementById('usdt-balance').textContent = (balance?.usdt || 0).toFixed(2);
-        }
-
-        // --- Firebase Initialization and User Management ---
+        // --- User Initialization ---
         async function initUser() {
-            let userId, username;
-            
+            let userId, username, referrerId = null;
+
+            // Get user data from Telegram WebApp
             if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
                 userId = tg.initDataUnsafe.user.id.toString();
-                username = tg.initDataUnsafe.user.username || tg.initDataUnsafe.user.first_name || `User_${userId.slice(-4)}`;
+                username = tg.initDataUnsafe.user.username || tg.initDataUnsafe.user.first_name || `User_${userId.slice(-5)}`;
+                
+                // Check for referral from URL parameters
+                const urlParams = new URLSearchParams(window.location.search);
+                referrerId = urlParams.get('start');
             } else {
-                // Fallback for testing (use unique IDs to simulate different users)
-                userId = 'test_user_' + (localStorage.getItem('testUserId') || Math.floor(Math.random() * 100000));
-                username = 'Demo User';
-                localStorage.setItem('testUserId', userId.split('_')[2]); // Keep test ID consistent per session
+                // Fallback for local testing (use a unique ID for each session)
+                userId = 'test_user_' + Math.random().toString(36).substring(2, 9);
+                username = 'Test User';
+                console.warn("Telegram WebApp not found or initData missing. Using test user.");
             }
 
             currentUser = {
@@ -1031,14 +1072,11 @@
                 username: username
             };
 
+            // Check if user exists, if not create
             const userRef = ref(db, `users/${userId}`);
             const userSnapshot = await get(userRef);
             
             if (!userSnapshot.exists()) {
-                // New user - check for referral
-                const urlParams = new URLSearchParams(window.location.search);
-                const referrerId = urlParams.get('start');
-                
                 const newUser = {
                     id: userId,
                     username: username,
@@ -1049,16 +1087,15 @@
                         usdt: 0
                     },
                     createdAt: Date.now(),
-                    referredBy: referrerId || null,
+                    referredBy: referrerId,
                     referrals: {},
                     completedTasks: {},
+                    giveawayParticipations: {},
                     lastAdDate: null,
                     adsWatchedToday: 0,
                     claimableReferral: {
                         ticket: 0,
-                        gold: 0,
-                        ton: 0, // Add ton/usdt to claimable
-                        usdt: 0
+                        gold: 0 // Added gold for referral claimable
                     }
                 };
                 
@@ -1071,11 +1108,13 @@
                         username: username,
                         joinedAt: Date.now()
                     });
+                    console.log(`New user ${username} referred by ${referrerId}`);
                 }
             }
 
-            // Listen for real-time updates to user data
-            onValue(userRef, (snapshot) => {
+            // Load user data and set up listeners
+            const userDataRef = ref(db, `users/${userId}`);
+            onValue(userDataRef, (snapshot) => {
                 if (snapshot.exists()) {
                     const userData = snapshot.val();
                     updateBalanceDisplay(userData.balance);
@@ -1083,135 +1122,81 @@
                     updateAdsDisplay();
                     updateClaimableAmount(userData.claimableReferral);
                     updateFriendsCount(userData.referrals);
-                    updateWithdrawalHistory(); // Load history when user data loads
-                    updateMoreMenuState(userData.balance); // Enable/disable withdraw based on balance
+                    
+                    // Update lastAdDate if it's a new day
+                    const today = new Date().toDateString();
+                    const lastAdDate = userData.lastAdDate;
+                    if (lastAdDate !== today) {
+                        adsWatched = 0;
+                        update(ref(db, `users/${currentUser.id}`), {
+                            adsWatchedToday: 0,
+                            lastAdDate: today
+                        });
+                        updateAdsDisplay();
+                    }
                 }
             });
 
-            // Load static data after user is initialized
-            loadData();
+            loadInitialData();
         }
 
         // --- Data Loading Functions ---
-        function loadData() {
-            loadGiveaways();
-            loadTasks();
+        function loadInitialData() {
             loadCategories();
+            loadTasks();
+            loadGiveaways();
             loadRecentWinners();
         }
 
-        function loadGiveaways() {
-            const giveawaysRef = ref(db, 'giveaways');
-            onValue(giveawaysRef, (snapshot) => {
-                giveaways = snapshot.val() || {};
-                renderGiveaways();
-                checkGiveawayCompletion();
-            });
-        }
-
-        function loadTasks() {
-            const tasksRef = ref(db, 'tasks');
-            onValue(tasksRef, (snapshot) => {
-                tasks = snapshot.val() || {};
-                renderTasks();
-            });
-        }
-
         function loadCategories() {
-            const categoriesRef = ref(db, 'categories');
             onValue(categoriesRef, (snapshot) => {
                 categories = snapshot.val() || {};
                 renderCategoryFilter();
             });
         }
 
+        function loadTasks() {
+            onValue(tasksRef, (snapshot) => {
+                tasks = snapshot.val() || {};
+                renderTasks();
+            });
+        }
+
+        function loadGiveaways() {
+            onValue(giveawaysRef, (snapshot) => {
+                giveaways = snapshot.val() || {};
+                renderGiveaways();
+                checkGiveawayCompletion(); // Check on data change
+            });
+        }
+
         function loadRecentWinners() {
-            const winnersRef = ref(db, 'winners');
-            onValue(winnersRef, (snapshot) => {
+            // Limit to 10 winners, ordered by time
+            const recentWinnersQuery = query(winnersRef); // You might want to add a limit here in Firebase rules or JS if db grows
+            onValue(recentWinnersQuery, (snapshot) => {
                 const winners = snapshot.val() || {};
                 renderRecentWinners(winners);
             });
         }
 
-        function updateWithdrawalHistory() {
-            const withdrawalsRef = ref(db, `withdrawals/${currentUser.id}`);
-            onValue(withdrawalsRef, (snapshot) => {
-                withdrawals = snapshot.val() || {};
-                renderWithdrawalsHistory();
-            });
-        }
-
         // --- Rendering Functions ---
-        function renderGiveaways() {
-            const container = document.getElementById('giveaways-container');
-            container.innerHTML = '';
-
-            const activeGiveaways = Object.entries(giveaways).filter(([id, giveaway]) => !giveaway.completed);
-            
-            if (activeGiveaways.length === 0) {
-                container.innerHTML = '<div class="card"><p>No active giveaways available.</p></div>';
-                return;
-            }
-
-            activeGiveaways.forEach(([id, giveaway]) => {
-                const participants = giveaway.participants || {};
-                const userParticipation = participants[currentUser.id] || 0;
-                const totalTicketsSold = Object.values(participants).reduce((sum, tickets) => sum + tickets, 0);
-                const progress = giveaway.totalTickets > 0 ? Math.round((totalTicketsSold / giveaway.totalTickets) * 100) : 0;
-
-                const card = document.createElement('div');
-                card.className = 'card giveaway-card';
-                card.innerHTML = `
-                    <div class="giveaway-header">
-                        <img src="${giveaway.icon || 'placeholder.png'}" alt="Icon" class="giveaway-icon">
-                        <div class="giveaway-info">
-                            <h3>${giveaway.title}</h3>
-                            <div class="prize-info">
-                                <span class="material-icons" style="font-size: 18px; vertical-align: middle;">paid</span> 
-                                ${giveaway.prizeAmount} ${giveaway.prizeType.toUpperCase()}
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: ${progress}%"></div>
-                    </div>
-                    
-                    <div class="progress-text">
-                        <span>${totalTicketsSold}/${giveaway.totalTickets} tickets</span>
-                        <span>${progress}%</span>
-                    </div>
-                    
-                    <button class="participate-btn" id="participate-btn-${id}" onclick="participateGiveaway('${id}')">
-                        <span class="material-icons" style="font-size: 18px; vertical-align: middle;">confirmation_number</span> 
-                        +1 Ticket (${giveaway.ticketPrice} tickets)
-                    </button>
-                    
-                    <div class="my-tickets">
-                        My tickets for this giveaway: ${userParticipation} / ${giveaway.ticketPrice} 🎫
-                    </div>
-                `;
-                container.appendChild(card);
-
-                // Disable button if not enough tickets or already maxed out for this ticket price
-                const participateBtn = document.getElementById(`participate-btn-${id}`);
-                const userBalance = currentUser.balance?.ticket || 0;
-                if (userBalance < giveaway.ticketPrice || userParticipation >= giveaway.ticketPrice) {
-                    participateBtn.disabled = true;
-                    participateBtn.textContent = userBalance < giveaway.ticketPrice ? "Insufficient Tickets" : "Max Tickets";
-                }
-            });
+        function updateBalanceDisplay(balance) {
+            document.getElementById('ticket-balance').textContent = (balance?.ticket || 0).toFixed(2);
+            document.getElementById('gold-balance').textContent = (balance?.gold || 0).toFixed(2);
+            document.getElementById('ton-balance').textContent = (balance?.ton || 0).toFixed(2);
+            document.getElementById('usdt-balance').textContent = (balance?.usdt || 0).toFixed(2);
         }
 
         function renderCategoryFilter() {
             const container = document.getElementById('category-filter');
-            // Remove dynamically added buttons to re-render
-            container.querySelectorAll('.dynamic-category-btn').forEach(btn => btn.remove());
-
+            // Clear existing filter buttons except 'All'
+            container.querySelectorAll('.category-btn:not(.all)').forEach(btn => btn.remove());
+            
             Object.entries(categories).forEach(([id, category]) => {
                 const button = document.createElement('button');
-                button.className = 'category-btn dynamic-category-btn';
+                button.className = 'category-btn';
                 button.textContent = category.name;
+                button.dataset.categoryId = id;
                 button.onclick = () => filterTasks(id);
                 container.appendChild(button);
             });
@@ -1221,31 +1206,71 @@
             const container = document.getElementById('tasks-container');
             container.innerHTML = '';
 
-            const filteredTasks = Object.entries(tasks).filter(([id, task]) => filterCategory === 'all' || task.categoryId === filterCategory);
-            
-            if (filteredTasks.length === 0) {
-                container.innerHTML = '<div class="card"><p>No tasks available for this category.</p></div>';
+            Object.entries(tasks).forEach(([id, task]) => {
+                if (filterCategory === 'all' || task.categoryId === filterCategory) {
+                    const isCompleted = task.completions?.[currentUser.id];
+                    
+                    const card = document.createElement('div');
+                    card.className = 'card task-card';
+                    card.innerHTML = `
+                        <img src="${task.icon}" alt="Icon" class="task-icon">
+                        <div class="task-info">
+                            <div class="task-title">${task.title}</div>
+                            <div class="task-description">${task.description}</div>
+                            <div class="task-reward">+${task.rewardAmount} ${task.rewardType.toUpperCase()}</div>
+                        </div>
+                        <button class="task-btn" ${isCompleted ? 'disabled' : ''} onclick="startTask('${id}', '${task.link}', '${task.title}')">
+                            ${isCompleted ? 'Completed' : 'Start'}
+                        </button>
+                    `;
+                    container.appendChild(card);
+                }
+            });
+        }
+
+        function renderGiveaways() {
+            const container = document.getElementById('giveaways-container');
+            container.innerHTML = '';
+
+            const activeGiveaways = Object.entries(giveaways).filter(([id, giveaway]) => !giveaway.completed);
+
+            if (activeGiveaways.length === 0) {
+                container.innerHTML = '<div class="card"><p style="text-align: center; color: var(--text-muted);">No active giveaways right now. Check back soon!</p></div>';
                 return;
             }
 
-            filteredTasks.forEach(([id, task]) => {
-                const isCompleted = task.completions?.[currentUser.id];
-                
+            activeGiveaways.forEach(([id, giveaway]) => {
+                const participants = Object.keys(giveaway.participants || {}).length;
+                const progress = Math.min(100, Math.round((participants / giveaway.totalTickets) * 100)); // Cap at 100%
+                const userTickets = giveaway.participants?.[currentUser.id] || 0;
+
                 const card = document.createElement('div');
-                card.className = 'card task-card';
+                card.className = 'card giveaway-card';
                 card.innerHTML = `
-                    <img src="${task.icon || 'placeholder.png'}" alt="Icon" class="task-icon">
-                    <div class="task-info">
-                        <div class="task-title">${task.title}</div>
-                        <div class="task-description">${task.description}</div>
-                        <div class="task-reward">
-                            <span class="material-icons" style="font-size: 16px; vertical-align: middle;">paid</span>
-                            +${task.rewardAmount} ${task.rewardType.toUpperCase()}
+                    <div class="giveaway-header">
+                        <img src="${giveaway.icon}" alt="Icon" class="giveaway-icon">
+                        <div class="giveaway-info">
+                            <h3>${giveaway.title}</h3>
+                            <div class="prize-info">🏆 ${giveaway.prizeAmount} ${giveaway.prizeType.toUpperCase()}</div>
                         </div>
                     </div>
-                    <button class="task-btn" ${isCompleted ? 'disabled' : ''} onclick="startTask('${id}', '${task.link}')">
-                        ${isCompleted ? 'Completed' : 'Start'}
+                    
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progress}%"></div>
+                    </div>
+                    
+                    <div class="progress-text">
+                        <span>${participants}/${giveaway.totalTickets} tickets</span>
+                        <span>${progress}%</span>
+                    </div>
+                    
+                    <button class="participate-btn" onclick="participateGiveaway('${id}')" ${giveaway.ticketPrice > (currentUser.balance?.ticket || 0) ? 'disabled' : ''}>
+                        +1 🎫 (${giveaway.ticketPrice} tickets)
                     </button>
+                    
+                    <div class="my-tickets">
+                        My tickets: ${userTickets} / ${giveaway.ticketPrice} 🎫
+                    </div>
                 `;
                 container.appendChild(card);
             });
@@ -1256,385 +1281,27 @@
             container.innerHTML = '';
             
             const sortedWinners = Object.values(winners)
-                .sort((a, b) => b.wonAt - a.wonAt)
-                .slice(0, 5); // Show latest 5 winners
+                .sort((a, b) => (b.wonAt || 0) - (a.wonAt || 0)) // Handle cases where wonAt might be missing
+                .slice(0, 5); // Show top 5 recent winners
             
             if (sortedWinners.length === 0) {
-                container.innerHTML = '<p>🐻 No winners yet</p>';
+                container.innerHTML = '<p style="text-align: center; color: var(--text-muted);">🐻 No winners yet. Be the first!</p>';
                 return;
             }
             
             sortedWinners.forEach(winner => {
                 const item = document.createElement('div');
                 item.className = 'history-item';
-                // Display a portion of the user ID and their username if available
-                const winnerIdentifier = winner.username ? `@${winner.username}` : `User #${winner.userId.slice(-4)}`;
                 item.innerHTML = `
-                    <div class="history-user">
-                        <span class="material-icons" style="font-size: 18px; color: #4ecdc4;">emoji_events</span> 
-                        ${winnerIdentifier}
-                    </div>
-                    <div class="history-prize">
-                        <span class="material-icons" style="font-size: 16px; vertical-align: middle;">paid</span> 
-                        ${winner.prizeAmount} ${winner.prizeType.toUpperCase()}
-                    </div>
+                    <div class="history-user"><span class="material-icons">emoji_events</span>Winner #${winner.userId.slice(-5)}</div>
+                    <div class="history-prize">${winner.prizeAmount.toFixed(2)} ${winner.prizeType.toUpperCase()}</div>
                 `;
                 container.appendChild(item);
             });
-        }
-
-        function renderWithdrawalsHistory() {
-            const container = document.getElementById('withdrawals-history-container');
-            container.innerHTML = '';
-            
-            if (!withdrawals || Object.keys(withdrawals).length === 0) {
-                container.innerHTML = '<p>No withdrawal history yet.</p>';
-                return;
-            }
-
-            // Sort by date, newest first
-            const sortedWithdrawals = Object.entries(withdrawals)
-                .sort(([idA, withdrawalA], [idB, withdrawalB]) => withdrawalB.requestedAt - withdrawalA.requestedAt);
-
-            sortedWithdrawals.forEach(([id, withdrawal]) => {
-                const item = document.createElement('div');
-                item.className = 'history-item';
-                const statusClass = withdrawal.status || 'pending';
-                const date = new Date(withdrawal.requestedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-                
-                item.innerHTML = `
-                    <div>
-                        <div class="history-user">
-                            <span class="material-icons" style="font-size: 18px; color: #888;">paid</span> 
-                            ${withdrawal.amount} ${withdrawal.type.toUpperCase()}
-                        </div>
-                        <div style="font-size: 0.8rem; color: #aaa;">${date}</div>
-                    </div>
-                    <div class="history-status ${statusClass}">${statusClass}</div>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        // --- Page Navigation ---
-        window.showPage = function(pageName) {
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-            });
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            document.getElementById(`${pageName}-page`).classList.add('active');
-            event.target.closest('.nav-item').classList.add('active');
-            currentActivePage = pageName; // Update current page tracker
-        }
-
-        // --- Giveaway Logic ---
-        window.participateGiveaway = async function(giveawayId) {
-            const giveaway = giveaways[giveawayId];
-            if (!giveaway || giveaway.completed) return showNotification('Giveaway is no longer active.', 'error');
-
-            const userBalance = currentUser.balance?.ticket || 0;
-            const userParticipation = (giveaway.participants?.[currentUser.id] || 0);
-
-            if (userBalance < giveaway.ticketPrice) {
-                return showNotification('Insufficient tickets!', 'error');
-            }
-            if (userParticipation >= giveaway.ticketPrice) {
-                return showNotification('You have already purchased the maximum tickets for this giveaway.', 'warning');
-            }
-
-            try {
-                showNotification('Participating in giveaway...', 'info', 'Processing');
-                
-                // Deduct tickets from user balance
-                await update(ref(db, `users/${currentUser.id}/balance`), { ticket: userBalance - giveaway.ticketPrice });
-
-                // Add/update user participation for this giveaway
-                const newParticipation = userParticipation + giveaway.ticketPrice;
-                await update(ref(db, `giveaways/${giveawayId}/participants`), {
-                    [currentUser.id]: newParticipation
-                });
-
-                closeModal('notification-modal'); // Close loading notification
-                showNotification('Successfully participated! Your ticket has been added.', 'success');
-                
-                // Re-render immediately to update UI
-                renderGiveaways(); 
-
-            } catch (error) {
-                console.error("Participation Error:", error);
-                showNotification('Failed to participate. Please try again.', 'error');
-            }
-        }
-
-        async function checkGiveawayCompletion() {
-            for (const [id, giveaway] of Object.entries(giveaways)) {
-                if (!giveaway.completed) {
-                    const participants = giveaway.participants || {};
-                    const totalTicketsSold = Object.values(participants).reduce((sum, tickets) => sum + tickets, 0);
-                    
-                    if (totalTicketsSold >= giveaway.totalTickets) {
-                        await processGiveawayCompletion(id, giveaway, participants, totalTicketsSold);
-                    }
-                }
-            }
-        }
-
-        async function processGiveawayCompletion(giveawayId, giveaway, participants, totalTicketsSold) {
-            const participantIds = Object.keys(participants);
-            if (participantIds.length === 0) return;
-
-            // Select a single random winner from the participants list
-            const winnerId = participantIds[Math.floor(Math.random() * participantIds.length)];
-            const winnerInfo = await getUserInfo(winnerId); // Fetch winner's username
-            const winnerUsername = winnerInfo ? winnerInfo.username : `User #${winnerId.slice(-4)}`;
-            const prizeAmount = giveaway.prizeAmount;
-            const prizeType = giveaway.prizeType;
-
-            try {
-                // Update giveaway as completed
-                await update(ref(db, `giveaways/${giveawayId}`), {
-                    completed: true,
-                    winnerId: winnerId,
-                    winnerUsername: winnerUsername,
-                    completedAt: Date.now()
-                });
-
-                // Award prize to winner if they exist in our user database
-                if (winnerInfo) {
-                    const winnerBalanceRef = ref(db, `users/${winnerId}/balance/${prizeType}`);
-                    const winnerSnapshot = await get(winnerRef);
-                    const currentBalance = winnerSnapshot.val() || 0;
-                    await set(winnerBalanceRef, currentBalance + prizeAmount);
-                } else {
-                    console.warn(`Winner ${winnerId} not found in user database. Prize not awarded directly.`);
-                    // Optionally, you could store this prize to be awarded later if the user logs in.
-                }
-
-                // Add to global winners history
-                const winnersRef = ref(db, 'winners');
-                const newWinnerRef = push(winnersRef);
-                await set(newWinnerRef, {
-                    userId: winnerId,
-                    username: winnerUsername,
-                    giveawayId: giveawayId,
-                    giveawayTitle: giveaway.title,
-                    prizeAmount: prizeAmount,
-                    prizeType: prizeType,
-                    wonAt: Date.now()
-                });
-
-                showNotification(`🎉 Giveaway "${giveaway.title}" completed! ${winnerUsername} won ${prizeAmount} ${prizeType.toUpperCase()}!`, 'success', 'Giveaway Ended');
-
-            } catch (error) {
-                console.error("Error completing giveaway:", error);
-                showNotification('Failed to process giveaway completion.', 'error');
-            }
-        }
-
-        async function getUserInfo(userId) {
-            try {
-                const userRef = ref(db, `users/${userId}`);
-                const snapshot = await get(userRef);
-                if (snapshot.exists()) {
-                    return snapshot.val();
-                }
-                return null;
-            } catch (error) {
-                console.error("Error fetching user info:", error);
-                return null;
-            }
-        }
-
-        // --- Task Logic ---
-        window.filterTasks = function(categoryId) {
-            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
-            // Use event.target.closest if event is triggered by nested element
-            const clickedBtn = event.target.closest('.category-btn');
-            if (clickedBtn) clickedBtn.classList.add('active');
-            renderTasks(categoryId);
-        }
-
-        window.startTask = function(taskId, taskLink) {
-            currentTaskId = taskId;
-            
-            // Store current task details if needed by completion logic
-            const task = tasks[taskId];
-            if (task) {
-                sessionStorage.setItem('currentTask', JSON.stringify({ id: taskId, ...task }));
-            }
-
-            window.open(taskLink, '_blank');
-            
-            showModal('task-modal');
-            startCountdown();
-        }
-
-        function startCountdown() {
-            let count = 10;
-            const countdownEl = document.getElementById('countdown');
-            countdownEl.textContent = count;
-            
-            const timer = setInterval(() => {
-                count--;
-                countdownEl.textContent = count < 0 ? 'Ready!' : count;
-                
-                if (count < 0) {
-                    clearInterval(timer);
-                }
-            }, 1000);
-        }
-
-        window.completeTask = async function() {
-            const currentTaskString = sessionStorage.getItem('currentTask');
-            if (!currentTaskString) {
-                closeModal('task-modal');
-                return showNotification('Task details not found. Please try starting the task again.', 'error');
-            }
-            
-            const task = JSON.parse(currentTaskString);
-            sessionStorage.removeItem('currentTask');
-
-            if (!task || !task.id) {
-                closeModal('task-modal');
-                return showNotification('Invalid task data.', 'error');
-            }
-            
-            const taskRef = ref(db, `tasks/${task.id}/completions`);
-            const userCompletionRef = ref(db, `users/${currentUser.id}/completedTasks/${task.id}`);
-            const userBalanceRef = ref(db, `users/${currentUser.id}/balance/${task.rewardType}`);
-            const userReferralClaimRef = ref(db, `users/${currentUser.id}/claimableReferral/${task.rewardType}`);
-
-            try {
-                // Mark task as completed for the user
-                await set(userCompletionRef, Date.now());
-                await update(taskRef, { [currentUser.id]: Date.now() }); // Also update in tasks node
-
-                // Award user
-                const balanceSnapshot = await get(userBalanceRef);
-                const currentBalance = balanceSnapshot.val() || 0;
-                await set(userBalanceRef, currentBalance + task.rewardAmount);
-
-                // Award referrer commission
-                const userDoc = await get(ref(db, `users/${currentUser.id}`));
-                const userData = userDoc.val();
-                
-                if (userData && userData.referredBy) {
-                    const referrerBalanceSnapshot = await get(userReferralClaimRef);
-                    const referrerBalance = referrerBalanceSnapshot.val() || 0;
-                    const commission = task.rewardAmount * 0.1; // 10% commission
-                    await set(userReferralClaimRef, referrerBalance + commission);
-                }
-
-                closeModal('task-modal');
-                showNotification(`Task completed! +${task.rewardAmount} ${task.rewardType.toUpperCase()}`, 'success');
-                
-                // Re-render tasks to update button state
-                renderTasks(document.querySelector('.category-btn.active').dataset.categoryId || 'all'); 
-
-            } catch (error) {
-                console.error("Task completion error:", error);
-                closeModal('task-modal');
-                showNotification('Failed to complete task. Please try again later.', 'error');
-            }
-        }
-
-        // --- Ad Logic ---
-        window.watchAd = function() {
-            if (adsWatched >= maxAdsPerDay) {
-                return showNotification('Maximum ads watched for today!', 'warning');
-            }
-
-            const today = new Date().toDateString();
-            const lastAdDate = localStorage.getItem('lastAdDate');
-            
-            // Reset watched count if it's a new day
-            if (lastAdDate !== today) {
-                adsWatched = 0;
-                localStorage.setItem('lastAdDate', today);
-                // Update Firebase with the reset date and count
-                update(ref(db, `users/${currentUser.id}`), {
-                    lastAdDate: today,
-                    adsWatchedToday: 0
-                });
-            }
-
-            // Trigger ad SDK (assuming show_9900905 is globally available from the script)
-            if (typeof show_9900905 === 'function') {
-                show_9900905();
-                showNotification('Ad is loading...', 'info');
-                
-                // Simulate ad completion after a delay
-                setTimeout(async () => {
-                    const adRewardAmount = 0.1; // Tickets
-                    const adRewardType = 'ticket';
-                    const referralCommissionRate = 0.1; // 10%
-
-                    try {
-                        // Update user's balance
-                        const userBalanceRef = ref(db, `users/${currentUser.id}/balance/${adRewardType}`);
-                        const balanceSnapshot = await get(userBalanceRef);
-                        const currentBalance = balanceSnapshot.val() || 0;
-                        await set(userBalanceRef, currentBalance + adRewardAmount);
-
-                        // Update ads watched count and date in Firebase
-                        adsWatched++;
-                        await update(ref(db, `users/${currentUser.id}`), {
-                            adsWatchedToday: adsWatched,
-                            lastAdDate: today // Ensure date is also updated if it was a new day
-                        });
-                        updateAdsDisplay(); // Update local display
-
-                        // Award referrer
-                        const userDoc = await get(ref(db, `users/${currentUser.id}`));
-                        const userData = userDoc.val();
-                        
-                        if (userData && userData.referredBy) {
-                            const referrerClaimRef = ref(db, `users/${userData.referredBy}/claimableReferral/${adRewardType}`);
-                            const referrerClaimSnapshot = await get(referrerClaimRef);
-                            const referrerClaim = referrerClaimSnapshot.val() || 0;
-                            const commission = adRewardAmount * referralCommissionRate;
-                            await set(referrerClaimRef, referrerClaim + commission);
-                        }
-
-                        showNotification(`Ad completed! +${adRewardAmount} ${adRewardType.toUpperCase()}`, 'success');
-
-                    } catch (error) {
-                        console.error("Ad completion error:", error);
-                        showNotification('Failed to process ad reward. Please try again.', 'error');
-                    }
-                }, 15000); // Simulate ad duration (e.g., 15 seconds) - ADJUST AS NEEDED
-            } else {
-                showNotification('Ad service not available. Please try again later.', 'error');
-            }
         }
 
         function updateAdsDisplay() {
             document.getElementById('ads-watched').textContent = `Today: ${adsWatched}/${maxAdsPerDay} ads watched`;
-        }
-
-        // --- Referral Logic ---
-        window.inviteFriend = function() {
-            if (!currentUser) return showNotification('User not initialized yet.', 'error');
-
-            const botUsername = 'YourTelegramBotUsername'; // <-- IMPORTANT: Replace with your bot's username
-            const referLink = `https://t.me/${botUsername}/app?start=${currentUser.id}`;
-            const shareText = `🎁 Join MoneBux and start earning tickets and rewards! Use my referral link to get a bonus and earn from my activity!`;
-            
-            if (tg) {
-                // Use Telegram's share functionality for best integration
-                tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(referLink)}&text=${encodeURIComponent(shareText)}`);
-            } else {
-                // Fallback for desktop or web where tg.openTelegramLink might not work as expected
-                navigator.clipboard.writeText(referLink).then(() => {
-                    showNotification('Referral link copied to clipboard!');
-                }).catch(err => {
-                    console.error('Failed to copy referral link: ', err);
-                    showNotification('Could not copy referral link. Please copy it manually: ' + referLink, 'warning');
-                });
-            }
         }
 
         function updateFriendsCount(referrals) {
@@ -1644,155 +1311,478 @@
 
         function updateClaimableAmount(claimable) {
             const ticket = claimable?.ticket || 0;
-            const gold = claimable?.gold || 0;
-            const ton = claimable?.ton || 0;
-            const usdt = claimable?.usdt || 0;
-            document.getElementById('claimable-amount').textContent = `${ticket.toFixed(2)} 🎫 ${gold.toFixed(2)} 🌟 ${ton.toFixed(2)} 💎 ${usdt.toFixed(2)} 💲`;
+            document.getElementById('claimable-amount').textContent = `${ticket.toFixed(2)} 🎫`;
+        }
+
+        // --- Event Handlers ---
+        window.filterTasks = function(categoryId) {
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            // Find the button that was clicked using event.target or dataset
+            const clickedBtn = event.target.closest('.category-btn');
+            if (clickedBtn) {
+                clickedBtn.classList.add('active');
+            }
+            renderTasks(categoryId);
+        }
+
+        window.startTask = function(taskId, taskLink, taskTitle) {
+            currentTaskId = taskId;
             
-            // Enable claim button only if there's something to claim
-            const claimBtn = document.getElementById('claim-referral-btn');
-            if (ticket > 0 || gold > 0 || ton > 0 || usdt > 0) {
-                claimBtn.disabled = false;
+            // Open task in a new tab/window
+            const taskWindow = window.open(taskLink, '_blank');
+            
+            // Show countdown modal
+            document.getElementById('task-modal').classList.add('active');
+            startCountdown(taskTitle);
+
+            // If the user closes the window before marking as complete
+            const timerCheck = setInterval(() => {
+                if (taskWindow && taskWindow.closed) {
+                    clearInterval(timerCheck);
+                    showNotification("Task window closed. Please mark as complete or cancel.", "error");
+                    // Optionally, you could auto-cancel the task here
+                }
+            }, 1000);
+        }
+
+        function startCountdown(taskTitle) {
+            let count = 10; // Countdown from 10 seconds
+            const countdownEl = document.getElementById('countdown');
+            countdownEl.textContent = count;
+            
+            const timer = setInterval(() => {
+                count--;
+                countdownEl.textContent = count;
+                
+                if (count <= 0) {
+                    clearInterval(timer);
+                    countdownEl.textContent = 'Ready!';
+                    showNotification(`You can now mark "${taskTitle}" as complete.`, "success");
+                }
+            }, 1000);
+        }
+
+        window.completeTask = async function() {
+            if (!currentTaskId) return;
+
+            const task = tasks[currentTaskId];
+            if (!task) {
+                showNotification("Task not found!", "error");
+                closeModal('task-modal');
+                return;
+            }
+
+            // Check if already completed by this user
+            const taskCompletionSnapshot = await get(ref(db, `tasks/${currentTaskId}/completions/${currentUser.id}`));
+            if (taskCompletionSnapshot.exists()) {
+                showNotification("This task has already been completed.", "error");
+                closeModal('task-modal');
+                return;
+            }
+
+            // Mark task as completed
+            await update(ref(db, `tasks/${currentTaskId}/completions`), {
+                [currentUser.id]: Date.now()
+            });
+
+            // Award user balance
+            const userBalanceRef = ref(db, `users/${currentUser.id}/balance/${task.rewardType}`);
+            const balanceSnapshot = await get(userBalanceRef);
+            const currentBalance = balanceSnapshot.val() || 0;
+            await set(userBalanceRef, currentBalance + task.rewardAmount);
+
+            // Award referrer if they exist and are different from the current user
+            const userSnapshot = await get(ref(db, `users/${currentUser.id}`));
+            const userData = userSnapshot.val();
+            
+            if (userData.referredBy && userData.referredBy !== currentUser.id) {
+                const referrerBalanceRef = ref(db, `users/${userData.referredBy}/claimableReferral/ticket`); // Assuming referral commission is always in tickets for simplicity
+                const referrerBalanceSnapshot = await get(referrerBalanceRef);
+                const referrerBalance = referrerBalanceSnapshot.val() || 0;
+                const commission = task.rewardAmount * 0.1; // 10% commission
+                await set(referrerBalanceRef, referrerBalance + commission);
+                showNotification(`You earned ${commission.toFixed(2)} tickets from your friend's completion!`);
+            }
+
+            closeModal('task-modal');
+            showNotification(`Task "${task.title}" completed! +${task.rewardAmount} ${task.rewardType.toUpperCase()}`);
+            currentTaskId = null; // Reset for next task
+        }
+
+        window.watchAd = async function() {
+            if (adsWatched >= maxAdsPerDay) {
+                showNotification('Maximum ads watched for today!', 'error');
+                return;
+            }
+
+            // Trigger ad display (assuming show_9900905 is globally available from the SDK script)
+            if (typeof show_9900905 === 'function') {
+                show_9900905();
+                // The ad SDK should ideally provide a callback or signal when an ad is completed.
+                // For simulation, we'll use a setTimeout.
+                showNotification('Ad starting...', 'info');
+
+                // Simulate ad completion after a delay
+                setTimeout(async () => {
+                    const adRewardAmount = 0.1; // Reward for watching ad
+
+                    // Award user
+                    const userBalanceRef = ref(db, `users/${currentUser.id}/balance/ticket`);
+                    const balanceSnapshot = await get(userBalanceRef);
+                    const currentBalance = balanceSnapshot.val() || 0;
+                    await set(userBalanceRef, currentBalance + adRewardAmount);
+                    
+                    // Update ads watched count and date
+                    adsWatched++;
+                    const today = new Date().toDateString();
+                    await update(ref(db, `users/${currentUser.id}`), {
+                        adsWatchedToday: adsWatched,
+                        lastAdDate: today
+                    });
+                    updateAdsDisplay();
+
+                    // Award referrer
+                    const userSnapshot = await get(ref(db, `users/${currentUser.id}`));
+                    const userData = userSnapshot.val();
+                    if (userData.referredBy && userData.referredBy !== currentUser.id) {
+                        const referrerBalanceRef = ref(db, `users/${userData.referredBy}/claimableReferral/ticket`);
+                        const referrerBalanceSnapshot = await get(referrerBalanceRef);
+                        const referrerBalance = referrerBalanceSnapshot.val() || 0;
+                        const commission = adRewardAmount * 0.1; // 10% commission
+                        await set(referrerBalanceRef, referrerBalance + commission);
+                        showNotification(`Your friend watched an ad! You earned ${commission.toFixed(2)} tickets.`);
+                    }
+                    
+                    showNotification(`Ad completed! +${adRewardAmount} Tickets`);
+                }, 5000); // Simulate ad duration (5 seconds)
+
             } else {
-                claimBtn.disabled = true;
+                showNotification('Ad service not available.', 'error');
+            }
+        }
+
+        window.inviteFriend = function() {
+            const telegramBotUsername = "yourbotusername"; // <<< REPLACE WITH YOUR BOT'S USERNAME
+            const referLink = `https://t.me/${telegramBotUsername}/${encodeURIComponent(currentUser.id)}`; // This link will open your bot and pass userId as start parameter
+            const shareText = `🎁 Join MoneBux and start earning tickets and rewards! Use my referral link:`;
+            
+            if (tg) {
+                // Using tg.openTelegramLink is usually for opening external URLs.
+                // For sharing within Telegram, using the "share" intent is better.
+                // However, Telegram Web App doesn't directly expose a 'share' button.
+                // The best approach is to generate the link and let the user copy/paste or use it.
+                
+                // Option 1: Open a share dialog if your bot handles it (more complex)
+                // Option 2: Copy the link to clipboard and notify the user
+                
+                navigator.clipboard.writeText(referLink).then(() => {
+                    showNotification('Referral link copied to clipboard!');
+                }).catch(err => {
+                    showNotification('Failed to copy link. Please copy manually:', 'error');
+                    console.error('Clipboard API error:', err);
+                    // Fallback to showing the link directly if clipboard fails
+                    alert(`Your referral link:\n${referLink}`);
+                });
+            } else {
+                // Fallback for non-Telegram environments
+                navigator.clipboard.writeText(referLink).then(() => {
+                    showNotification('Referral link copied to clipboard!');
+                }).catch(err => {
+                    showNotification('Failed to copy link. Please copy manually:', 'error');
+                    console.error('Clipboard API error:', err);
+                    alert(`Your referral link:\n${referLink}`);
+                });
             }
         }
 
         window.claimReferral = async function() {
-            const userSnapshot = await get(ref(db, `users/${currentUser.id}`));
+            const userRef = ref(db, `users/${currentUser.id}`);
+            const userSnapshot = await get(userRef);
             const userData = userSnapshot.val();
             const claimable = userData.claimableReferral || {};
             
-            if ((claimable.ticket || 0) <= 0 && (claimable.gold || 0) <= 0 && (claimable.ton || 0) <= 0 && (claimable.usdt || 0) <= 0) {
-                return showNotification('No rewards to claim!', 'warning');
-            }
-
-            try {
-                const currentBalance = userData.balance || {};
-                const newBalance = {
-                    ticket: (currentBalance.ticket || 0) + (claimable.ticket || 0),
-                    gold: (currentBalance.gold || 0) + (claimable.gold || 0),
-                    ton: (currentBalance.ton || 0) + (claimable.ton || 0),
-                    usdt: (currentBalance.usdt || 0) + (claimable.usdt || 0)
-                };
-                
-                await update(ref(db, `users/${currentUser.id}`), {
-                    balance: newBalance,
-                    claimableReferral: { ticket: 0, gold: 0, ton: 0, usdt: 0 } // Reset claimable amounts
-                });
-                
-                showNotification('Referral rewards claimed successfully!', 'success');
-            } catch (error) {
-                console.error("Claim referral error:", error);
-                showNotification('Failed to claim referral rewards. Please try again.', 'error');
-            }
-        }
-
-        // --- Withdrawal Logic ---
-        function toggleMoreMenu() {
-            showModal('more-menu-modal');
-        }
-
-        window.openWithdrawalModal = function() {
-            closeModal('more-menu-modal');
-            // Populate withdrawal modal based on current balances
-            const balance = currentUser.balance || {};
-            const tonBalance = balance.ton || 0;
-            const usdtBalance = balance.usdt || 0;
-            const goldBalance = balance.gold || 0;
-
-            const currencySelect = document.getElementById('withdraw-currency');
-            currencySelect.innerHTML = '<option value="">Select Currency</option>'; // Reset options
-            
-            if (tonBalance > 0) currencySelect.innerHTML += `<option value="ton">TON (${tonBalance.toFixed(2)})</option>`;
-            if (usdtBalance > 0) currencySelect.innerHTML += `<option value="usdt">USDT (${usdtBalance.toFixed(2)})</option>`;
-            if (goldBalance > 0) currencySelect.innerHTML += `<option value="gold">Gold (${goldBalance.toFixed(2)})</option>`;
-            
-            if (currencySelect.children.length === 1) { // Only the default option
-                showNotification('You have no funds to withdraw.', 'warning');
+            if ((claimable.ticket || 0) <= 0) {
+                showNotification('No rewards to claim!', 'error');
                 return;
             }
 
-            showModal('withdrawal-modal');
+            // Add to main balance
+            const currentBalance = userData.balance || {};
+            const newBalance = {
+                ticket: (currentBalance.ticket || 0) + (claimable.ticket || 0),
+                gold: currentBalance.gold || 0,
+                ton: currentBalance.ton || 0,
+                usdt: currentBalance.usdt || 0
+            };
+            
+            await update(ref(db, `users/${currentUser.id}`), {
+                balance: newBalance,
+                claimableReferral: { ticket: 0 } // Reset claimable amount
+            });
+            
+            showNotification(`Referral rewards claimed! +${claimable.ticket.toFixed(2)} Tickets`);
         }
 
-        document.getElementById('withdrawal-form').addEventListener('submit', async function(event) {
-            event.preventDefault();
-            
-            const currency = document.getElementById('withdraw-currency').value;
-            const amount = parseFloat(document.getElementById('withdraw-amount').value);
-            const wallet = document.getElementById('withdraw-wallet').value.trim();
-            const userBalance = currentUser.balance?.[currency] || 0;
-
-            if (!currency || isNaN(amount) || amount <= 0 || !wallet) {
-                return showNotification('Please fill in all fields correctly.', 'warning');
-            }
-            if (amount > userBalance) {
-                return showNotification(`Insufficient ${currency.toUpperCase()} balance.`, 'warning');
+        // --- Giveaway Logic ---
+        window.participateGiveaway = async function(giveawayId) {
+            const giveaway = giveaways[giveawayId];
+            if (!giveaway || giveaway.completed) {
+                showNotification("This giveaway is no longer active.", "error");
+                return;
             }
 
-            // Basic wallet address validation (can be more sophisticated)
-            if (currency === 'ton' && !wallet.startsWith('UQ')) { // Basic TON address format
-                 //return showNotification('Invalid TON wallet address format.', 'warning');
-            }
-            if (currency === 'usdt' && wallet.length < 26) { // Basic USDT address format (often similar to ETH)
-                 //return showNotification('Invalid USDT wallet address format.', 'warning');
-            }
+            const userRef = ref(db, `users/${currentUser.id}`);
+            const userSnapshot = await get(userRef);
+            const userData = userSnapshot.val();
 
-            const withdrawalData = {
-                userId: currentUser.id,
-                username: currentUser.username,
-                amount: amount,
-                type: currency,
-                wallet: wallet,
-                status: 'pending',
-                requestedAt: Date.now(),
-                processedAt: null
-            };
-
-            try {
-                // Deduct amount from user balance immediately
-                const newBalance = { ...currentUser.balance };
-                newBalance[currency] = (newBalance[currency] || 0) - amount;
-                await update(ref(db, `users/${currentUser.id}/balance`), newBalance);
-                
-                // Save withdrawal request to Firebase
-                const withdrawalRef = ref(db, `withdrawals/${currentUser.id}/${Date.now()}`); // Use timestamp as unique ID
-                await set(withdrawalRef, withdrawalData);
-
-                closeModal('withdrawal-modal');
-                showNotification('Withdrawal request submitted successfully! It will be processed shortly.', 'success');
-                
-            } catch (error) {
-                console.error("Withdrawal request error:", error);
-                // If error occurs after balance deduction, you might need a rollback mechanism
-                showNotification('Failed to submit withdrawal request. Please try again.', 'error');
-            }
-        });
-
-        function updateMoreMenuState(balance) {
-            const withdrawBtn = document.querySelector('#more-menu-modal .modal-btn');
-            let hasFundsToWithdraw = false;
-            if (balance) {
-                if ((balance.ton || 0) > 0) hasFundsToWithdraw = true;
-                if ((balance.usdt || 0) > 0) hasFundsToWithdraw = true;
-                if ((balance.gold || 0) > 0) hasFundsToWithdraw = true;
+            if (!userData || !userData.balance || userData.balance.ticket < giveaway.ticketPrice) {
+                showNotification('Insufficient tickets!', 'error');
+                return;
             }
 
-            if (withdrawBtn) {
-                withdrawBtn.disabled = !hasFundsToWithdraw;
-                if (!hasFundsToWithdraw) {
-                    withdrawBtn.style.opacity = '0.5';
-                    withdrawBtn.style.cursor = 'not-allowed';
-                } else {
-                    withdrawBtn.style.opacity = '1';
-                    withdrawBtn.style.cursor = 'pointer';
+            // Deduct tickets
+            const newBalance = userData.balance.ticket - giveaway.ticketPrice;
+            await update(userRef, {
+                'balance/ticket': newBalance
+            });
+
+            // Add/Update user participation count for this giveaway
+            const participationRef = ref(db, `giveaways/${giveawayId}/participants/${currentUser.id}`);
+            const participationSnapshot = await get(participationRef);
+            const currentParticipation = participationSnapshot.val() || 0;
+            await set(participationRef, currentParticipation + giveaway.ticketPrice);
+
+            // Update user's total tickets spent on this giveaway
+            await update(ref(db, `users/${currentUser.id}/giveawayParticipations/${giveawayId}`), {
+                ticketsSpent: currentParticipation + giveaway.ticketPrice
+            });
+
+            showNotification('Successfully participated in giveaway!');
+        }
+
+        async function checkGiveawayCompletion() {
+            const activeGiveawayEntries = Object.entries(giveaways).filter(([id, giveaway]) => !giveaway.completed);
+
+            for (const [id, giveaway] of activeGiveaways) {
+                const participantsCount = Object.keys(giveaway.participants || {}).length;
+
+                if (participantsCount >= giveaway.totalTickets) {
+                    console.log(`Giveaway ${id} reached total tickets needed.`);
+                    
+                    // Ensure we don't process the same giveaway multiple times if data updates rapidly
+                    if (giveaway.completed) continue;
+
+                    // Select ONE random winner from the participants who spent tickets
+                    const ticketHolders = Object.entries(giveaway.participants || {})
+                        .filter(([userId, tickets]) => tickets > 0); // Ensure they actually participated
+
+                    if (ticketHolders.length === 0) {
+                        console.warn(`Giveaway ${id}: No participants with tickets found to select a winner.`);
+                        continue; // No one participated with tickets
+                    }
+
+                    // Choose a random participant (weighted by tickets spent if needed, but simple random is fine for now)
+                    const randomIndex = Math.floor(Math.random() * ticketHolders.length);
+                    const [winnerId, winnerTickets] = ticketHolders[randomIndex];
+
+                    // Fetch winner's username for the notification/history
+                    const winnerUserSnapshot = await get(ref(db, `users/${winnerId}/username`));
+                    const winnerUsername = winnerUserSnapshot.exists() ? winnerUserSnapshot.val() : `User #${winnerId.slice(-5)}`;
+
+                    // Update giveaway as completed
+                    await update(ref(db, `giveaways/${id}`), {
+                        completed: true,
+                        winner: winnerId,
+                        winnerUsername: winnerUsername,
+                        completedAt: Date.now()
+                    });
+
+                    // Award prize to the winner
+                    const prizeType = giveaway.prizeType;
+                    const prizeAmount = giveaway.prizeAmount;
+                    const winnerBalanceRef = ref(db, `users/${winnerId}/balance/${prizeType}`);
+                    const currentWinnerBalanceSnapshot = await get(winnerBalanceRef);
+                    const currentWinnerBalance = currentWinnerBalanceSnapshot.val() || 0;
+                    await set(winnerBalanceRef, currentWinnerBalance + prizeAmount);
+
+                    // Add to winners history
+                    const newWinnerRef = push(winnersRef);
+                    await set(newWinnerRef, {
+                        userId: winnerId,
+                        username: winnerUsername,
+                        giveawayId: id,
+                        giveawayTitle: giveaway.title,
+                        prizeAmount: prizeAmount,
+                        prizeType: prizeType,
+                        wonAt: Date.now()
+                    });
+
+                    showNotification(`🎉 Winner of "${giveaway.title}" is ${winnerUsername}! They won ${prizeAmount} ${prizeType.toUpperCase()}!`, "success");
                 }
             }
         }
 
+
+        // --- Withdrawal Functions ---
+        window.openWithdrawalModal = function() {
+            document.getElementById('withdrawal-modal').classList.add('active');
+        }
+
+        document.getElementById('withdrawal-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const type = document.getElementById('withdrawal-type').value;
+            const amount = parseFloat(document.getElementById('withdrawal-amount').value);
+            const wallet = document.getElementById('withdrawal-wallet').value.trim();
+
+            if (!type || amount <= 0 || !wallet) {
+                showNotification('Please fill in all fields correctly.', 'error');
+                return;
+            }
+
+            const userBalanceRef = ref(db, `users/${currentUser.id}/balance/${type}`);
+            const userBalanceSnapshot = await get(userBalanceRef);
+            const currentBalance = userBalanceSnapshot.val() || 0;
+
+            if (currentBalance < amount) {
+                showNotification(`Insufficient ${type.toUpperCase()} balance.`, 'error');
+                return;
+            }
+
+            // Confirm withdrawal request
+            const confirmWithdrawal = confirm(`Are you sure you want to withdraw ${amount.toFixed(2)} ${type.toUpperCase()} to ${wallet}? (Requires admin approval)`);
+            if (!confirmWithdrawal) {
+                return;
+            }
+
+            // Create withdrawal request
+            const newWithdrawalRef = push(withdrawalsRef);
+            await set(newWithdrawalRef, {
+                userId: currentUser.id,
+                username: currentUser.username,
+                type: type,
+                amount: amount,
+                wallet: wallet,
+                status: 'pending',
+                createdAt: Date.now(),
+                processedAt: null
+            });
+
+            // Deduct from user balance immediately (or mark as pending deduction)
+            // For simplicity, let's deduct immediately. In a real system, admin approval might be needed before deduction.
+            await update(userBalanceRef, {
+                [type]: currentBalance - amount
+            });
+
+            showNotification('Withdrawal request submitted for approval.', 'info');
+            closeModal('withdrawal-modal');
+            document.getElementById('withdrawal-form').reset(); // Clear form
+        });
+
+        window.showWithdrawalHistory = function() {
+            document.getElementById('history-modal').classList.add('active');
+            loadWithdrawalHistory();
+        }
+
+        function loadWithdrawalHistory() {
+            const historyList = document.getElementById('history-list');
+            historyList.innerHTML = '<p style="text-align: center; color: var(--text-muted);">Loading history...</p>';
+
+            // Remove previous listener if it exists
+            if (withdrawalHistoryListener) {
+                // This is a simplified approach; ideally, you'd want to unregister the listener properly
+                // onValue(withdrawalHistoryListener, () => {}); // This doesn't unregister. Proper unregistration requires storing the function reference returned by onValue.
+            }
+
+            const userWithdrawalsQuery = query(withdrawalsRef, orderByChild('userId'), equalTo(currentUser.id));
+            withdrawalHistoryListener = onValue(userWithdrawalsQuery, (snapshot) => {
+                const historyItems = snapshot.val() || {};
+                renderWithdrawalHistory(historyItems);
+            }, (error) => {
+                console.error("Error fetching withdrawal history:", error);
+                historyList.innerHTML = '<p style="text-align: center; color: red;">Error loading history.</p>';
+            });
+        }
+
+        function renderWithdrawalHistory(historyItems) {
+            const historyList = document.getElementById('history-list');
+            historyList.innerHTML = '';
+
+            if (Object.keys(historyItems).length === 0) {
+                historyList.innerHTML = '<p style="text-align: center; color: var(--text-muted);">No withdrawal history yet.</p>';
+                return;
+            }
+
+            // Sort by date
+            const sortedHistory = Object.entries(historyItems)
+                .sort(([, a], [, b]) => (b.createdAt || 0) - (a.createdAt || 0));
+
+            sortedHistory.forEach(([id, item]) => {
+                const statusClass = item.status === 'pending' ? 'pending' : (item.status === 'approved' ? 'approved' : 'rejected');
+                const statusText = item.status.charAt(0).toUpperCase() + item.status.slice(1);
+
+                const historyItemDiv = document.createElement('div');
+                historyItemDiv.className = 'history-item';
+                historyItemDiv.innerHTML = `
+                    <div>
+                        <div class="history-user">${item.amount.toFixed(2)} ${item.type.toUpperCase()}</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">${new Date(item.createdAt).toLocaleString()}</div>
+                    </div>
+                    <div class="history-prize status-${statusClass}" style="background: none; padding: 5px 10px;">${statusText}</div>
+                `;
+                historyList.appendChild(historyItemDiv);
+            });
+        }
+
+        // --- Profile and Menu ---
+        window.showProfile = function() {
+            // This would typically open a profile page or modal
+            // For now, just show a placeholder alert
+            alert(`Your Profile:\nUsername: ${currentUser.username}\nID: ${currentUser.id}`);
+        }
+
+        window.openMenu = function() {
+            document.getElementById('menu-modal').classList.add('active');
+        }
+
+        // --- Modal Control ---
+        window.showPage = function(pageName) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById(`${pageName}-page`).classList.add('active');
+
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            event.target.closest('.nav-item').classList.add('active');
+        }
+
+        window.closeModal = function(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('active');
+            }
+            // Reset any state associated with modals if necessary
+            if (modalId === 'task-modal') {
+                currentTaskId = null; // Reset task ID when closing task modal
+            }
+        }
+
+        // --- Notification System ---
+        function showNotification(message, type = 'success') {
+            const notificationContainer = document.getElementById('notification-container');
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            notificationContainer.appendChild(notification);
+
+            // Remove notification after a few seconds
+            setTimeout(() => {
+                notification.remove();
+            }, 5000); // Display for 5 seconds
+        }
+
         // --- Initialization ---
-        initUser(); // Start user initialization which then calls loadData()
+        initUser();
     </script>
 </body>
 </html>
